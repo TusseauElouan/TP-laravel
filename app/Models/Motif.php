@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
@@ -31,15 +30,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Database\Factories\MotifFactory factory($count = null, $state = [])
  *
  * @property-read \App\Models\Absence|null $Absence
- *
- * @property \Illuminate\Support\Carbon|null $deleted_at
- *
  * @property-read int|null $absence_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Motif onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Motif whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Motif withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Motif withoutTrashed()
+ *
+ * @property bool $is_deleted
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Motif whereIsDeleted($value)
  *
  * @mixin \Eloquent
  */
@@ -47,18 +46,27 @@ class Motif extends Model
 {
     /** @use HasFactory<MotifFactory> */
     use HasFactory;
-    use SoftDeletes;
-
     /**
      * Summary of getToutMotif
      *
      * @return Collection<int, Motif>
      */
-    public function getToutMotif()
+    public function getMotif()
     {
         return Motif::all();
     }
 
+    /**
+     * Summary of getMotifsCache
+     *
+     * @return Collection
+     */
+    public function getMotifsCache()
+    {
+        return cache()->remember('motifs', 60 * 60 * 24, function () {
+            return Motif::all();
+        });
+    }
     /**
      * Summary of Absence
      *
@@ -78,6 +86,7 @@ class Motif extends Model
     {
         return [
             'is_accessible_salarie' => 'boolean',
+            'is_deleted' => 'boolean',
         ];
     }
 }

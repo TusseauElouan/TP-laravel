@@ -11,6 +11,7 @@ class LangueController extends Controller
      * Change the application language.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function change(Request $request)

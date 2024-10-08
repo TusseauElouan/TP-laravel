@@ -90,6 +90,7 @@
     "Verify Email Address": "Verify Email Address",
     "Whoops!": "Whoops!",
     "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
+    "You need to be logged in" : "You need to be logged in",
     "You're logged in!": "You're logged in!",
     "Your email address is unverified.": "Your email address is unverified."
 }

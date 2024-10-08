@@ -10,13 +10,24 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class MotifController extends Controller
 {
     /**
+     * Summary of GetMotifsCached
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function GetMotifsCached()
+    {
+        $motifs = new Motif();
+        return $motifs->getMotifsCache();
+    }
+    /**
      * Summary of middleware
-     * @return Middleware[]
+     *
+     * @return array<Middleware>
      */
     public static function middleware()
     {
@@ -31,10 +42,7 @@ class MotifController extends Controller
      */
     public function index()
     {
-        if (! Auth::check()) {
-            return redirect()->route('login')->with('error', 'Vous devez vous connecter.');
-        }
-        $motifs = Motif::all();
+        $motifs = $this->GetMotifsCached();
         return view('motif.index', compact('motifs'));
     }
     /**
@@ -44,11 +52,7 @@ class MotifController extends Controller
      */
     public function create()
     {
-        if (Auth::check() && Auth::user()->isA('admin')) {
-            return view('motif.create');
-        }
-
-        return redirect()->route('accueil')->with('error', 'Accès refusé');
+        return view('motif.create');
     }
     /**
      * Summary of store
@@ -68,6 +72,7 @@ class MotifController extends Controller
         $motif->is_accessible_salarie = $validatedData['is_accessible_salarie'] ?? false;
         $motif->save();
 
+        Cache::forget('motifs');
         // Redirection avec message de succès
         return redirect()->route('motif.index')->with('success', 'Motif créé avec succès.');
     }
@@ -93,11 +98,7 @@ class MotifController extends Controller
      */
     public function edit(Motif $motif)
     {
-        if (Auth::check() && Auth::user()->isA('admin')) {
-            return view('motif.edit', compact('motif'));
-        }
-
-        return redirect()->route('motif.index')->with('error', 'Accès refusé');
+        return view('motif.edit', compact('motif'));
     }
 
     /**
@@ -118,6 +119,8 @@ class MotifController extends Controller
         $motif->is_accessible_salarie = $validatedData['is_accessible_salarie'] ?? false;
         $motif->save();
 
+        Cache::forget('motifs');
+
         // Redirection avec message de succès
         return redirect()->route('motif.index')->with('success', 'Motif modifié avec succès.');
     }
@@ -135,6 +138,7 @@ class MotifController extends Controller
 
         if ($nb === 0) {
             $motif->delete();
+            Cache::forget('motifs');
             return redirect()->route('motif.index')->with('success', 'Motif supprimé.');
         }
         return redirect()->route('motif.index')->with('error', "Ce motif est utilisé dans {$nb} absence(s).");

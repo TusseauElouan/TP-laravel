@@ -10,6 +10,7 @@ class ProfileUpdateRequest extends FormRequest
 {
     /**
      * Summary of rules
+     *
      * @return array<string, array<mixed>>
      */
     public function rules(): array

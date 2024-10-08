@@ -20,15 +20,17 @@ class AbsenceFactory extends Factory
      */
     public function definition(): array
     {
-          $startDate = Carbon::now()->addDays(rand(0, 60));
-          $absenceDuration = rand(1, 15);
-          $endDate = $startDate->copy()->addDays($absenceDuration);
+        $startDate = Carbon::now()->addDays(rand(0, 60));
+        $absenceDuration = rand(1, 15);
+        $endDate = $startDate->copy()->addDays($absenceDuration);
 
         return [
             'motif_id' => Motif::all()->random()->id,
             'user_id_salarie' => User::all()->random()->id,
             'date_absence_debut' => $startDate,
-            'date_absence_fin' => $endDate
+            'date_absence_fin' => $endDate,
+            'isValidated' => false,
+            'is_deleted' => false
         ];
     }
 }

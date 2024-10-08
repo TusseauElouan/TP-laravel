@@ -5,10 +5,9 @@ namespace App\Mail;
 use App\Models\Absence;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\SerializesModels;
 
 class AbsenceMail extends Mailable
 {
@@ -61,8 +60,7 @@ class AbsenceMail extends Mailable
     public function build()
     {
         return $this->markdown('emails.absence')
-                    ->subject('Validation de l\'absence de ' . $this->absence->user->nom)
-                    ->with('absence', $this->absence); // Passe les données de l'absence à la vue
+            ->subject('Validation de l\'absence de ' . $this->absence->user->nom)
+            ->with('absence', $this->absence); // Passe les données de l'absence à la vue
     }
 }
-

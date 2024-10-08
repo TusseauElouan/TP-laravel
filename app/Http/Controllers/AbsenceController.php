@@ -2,23 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Motif;
-use App\Models\Absence;
-use App\Mail\AbsenceMail;
-use App\Mail\AbsenceModifiedMail;
-use App\Mail\AbsenceValidateMail;
-use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Http\RedirectResponse;
-use App\Mail\AbsenceModifiedMailAdmin;
-use Illuminate\Contracts\View\Factory;
 use App\Http\Requests\AbsenceCreateRequest;
 use App\Http\Requests\AbsenceUpdateRequest;
+use App\Mail\AbsenceMail;
+use App\Mail\AbsenceModifiedMail;
+use App\Mail\AbsenceModifiedMailAdmin;
+use App\Mail\AbsenceValidateMail;
+use App\Models\Absence;
+use App\Models\Motif;
+use App\Models\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
 
 class AbsenceController extends Controller
 {
+    /**
+     * Summary of GetMotifsCached
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function GetMotifsCached()
+    {
+        $motifs = new Motif();
+        return $motifs->getMotifsCache();
+    }
     /**
      * Summary of index
      *
@@ -26,10 +35,7 @@ class AbsenceController extends Controller
      */
     public function index()
     {
-        if (! Auth::check()) {
-            return redirect()->route('login')->with('error', 'Vous devez vous connecter.');
-        }
-        $motif = Motif::all();
+        $motifs = $this->GetMotifsCached();
         $user = User::all();
         $absences = Absence::with(['user', 'motif'])->get();
         return view('absence.index', compact('absences'));
@@ -42,11 +48,8 @@ class AbsenceController extends Controller
      */
     public function create()
     {
-        if (! Auth::check()) {
-            return redirect()->route('login')->with('error', 'Vous devez être connecté pour créer une absence.');
-        }
         $users = User::all();
-        $motifs = Motif::all();
+        $motifs = $this->GetMotifsCached();
 
         return view('absence.create', compact('users', 'motifs'));
     }
@@ -79,11 +82,11 @@ class AbsenceController extends Controller
      *
      * @param \App\Models\Absence $absence
      *
-     * @return Factory|View
+     * @return void
      */
     public function show(Absence $absence)
     {
-        return view('absence.index');
+        return redirect()->route('absence.index');
     }
 
     /**
@@ -99,7 +102,7 @@ class AbsenceController extends Controller
             return redirect()->route('absence.index')->with('error', 'Cette absence est déjà validée.');
         }
         $users = User::all();
-        $motifs = Motif::all();
+        $motifs = $this->GetMotifsCached();
         return view('absence.edit', compact(['absence', 'users','motifs']));
     }
 
@@ -147,7 +150,9 @@ class AbsenceController extends Controller
 
     /**
      * Summary of validate
+     *
      * @param \App\Models\Absence $absence
+     *
      * @return RedirectResponse
      */
     public function validate(Absence $absence)
@@ -162,7 +167,9 @@ class AbsenceController extends Controller
 
     /**
      * Summary of restore
+     *
      * @param \App\Models\Absence $absence
+     *
      * @return RedirectResponse
      */
     public function restore(Absence $absence)
@@ -175,14 +182,13 @@ class AbsenceController extends Controller
 
     /**
      * Summary of showValidationPage
+     *
      * @param \App\Models\Absence $absence
+     *
      * @return Factory|View
      */
     public function showValidationPage(Absence $absence)
     {
-        if (Auth::check() && Auth::user()->isA('admin')){
-            return view('absence.confirm', compact('absence'));
-        }
-        return view('absence.index', compact('absences'))->with('success', 'Validation Success');
+        return view('absence.confirm', compact('absence'));
     }
 }

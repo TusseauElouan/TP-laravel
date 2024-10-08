@@ -4,11 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * @property int $id
@@ -119,6 +119,7 @@ class User extends Authenticatable
 
     /**
      * Summary of getAbsenceCountAttribute
+     *
      * @return int
      */
     public function getAbsenceCountAttribute(): int
@@ -128,6 +129,7 @@ class User extends Authenticatable
 
     /**
      * Summary of getInitialesAttribute
+     *
      * @return string
      */
     public function getInitialesAttribute()

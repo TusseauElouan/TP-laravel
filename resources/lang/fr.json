@@ -90,6 +90,7 @@
     "Verify Email Address": "Vérifier l'adresse e-mail",
     "Whoops!": "Oups !",
     "You are receiving this email because we received a password reset request for your account.": "Vous recevez cet e-mail car nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.",
+    "You need to be logged in" : "Vous devez être connecté",
     "You're logged in!": "Vous êtes connecté·e !",
     "Your email address is unverified.": "Votre adresse e-mail n'est pas vérifiée."
 }

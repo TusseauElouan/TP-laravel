@@ -48,6 +48,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereIsValidated($value)
  *
+ * @property int $is_deleted
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Absence whereIsDeleted($value)
+ *
  * @mixin \Eloquent
  */
 class Absence extends Model
@@ -76,6 +80,7 @@ class Absence extends Model
 
     /**
      * Summary of casts
+     *
      * @return array<string, string>
      */
     protected function casts(): array

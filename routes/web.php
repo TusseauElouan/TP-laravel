@@ -1,14 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\MotifController;
-use App\Http\Controllers\LangueController;
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\AccueilController;
+use App\Http\Controllers\LangueController;
+use App\Http\Controllers\MotifController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
-Route::middleware(['set.language'])->group(function () {
+Route::middleware(['set.language', 'auth'])->group(function () {
     Route::get('/', [AccueilController::class, 'index'])->name('accueil');
 
     Route::get('/welcome', function () {
@@ -32,7 +32,6 @@ Route::middleware(['set.language'])->group(function () {
 
         Route::resource('user', UserController::class);
         Route::resource('motif', MotifController::class);
-
     });
 });
 
