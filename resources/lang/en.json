@@ -2,6 +2,24 @@
     "(and :count more error)": "(and :count more error)",
     "(and :count more errors)": "(and :count more error)|(and :count more errors)|(and :count more errors)",
     "Absences List" : "Absences List",
+    "absence": {
+        "created_subject": "New absence created",
+        "created_content": "A new absence has been created.",
+        "created_content_admin": "A new absence has been created by :prenom :nom.",
+
+        "updated_subject": "Absence updated",
+        "updated_content": "The absence has been updated.",
+        "updated_content_admin": "An absence was updated by :prenom :nom.",
+
+        "deleted_subject": "Absence deleted",
+        "deleted_content": "The absence has been deleted.",
+
+        "validated_subject": "Absence validated",
+        "validated_content": "The absence has been validated.",
+
+        "restored_subject": "Absence restored",
+        "restored_content": "The absence has been restored."
+    },
     "Accessibility" : "Accessibility",
     "Action" : "Action",
     "Add Reason" : "Add Reason",

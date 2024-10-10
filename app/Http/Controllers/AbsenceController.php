@@ -103,8 +103,8 @@ class AbsenceController extends Controller
         $user = Auth::user();
 
         Mail::to($user->email)->send(new InfoGeneriqueMail(
-            'Nouvelle absence créée',
-            'Une nouvelle absence a été créée.',
+            __('absence.created_subject'),
+            __('absence.created_content'),
             $details,
             $absence
         ));
@@ -112,8 +112,8 @@ class AbsenceController extends Controller
         $admins = User::where('isAdmin', true)->get();
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new InfoGeneriqueMail(
-                'Nouvelle absence créée',
-                "Une nouvelle absence a été créée par {$user->prenom} {$user->nom}.",
+                __('absence.created_subject'),
+                __("absence.created_content_admin", ['prenom' => $user->prenom, 'nom' => $user->nom]),
                 $details,
                 $absence,
                 true
