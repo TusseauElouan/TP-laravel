@@ -9,8 +9,6 @@ class AbsenceCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -25,6 +23,7 @@ class AbsenceCreateRequest extends FormRequest
     public function rules(): array
     {
         $dateAbsenceDebut = $this->input('date_absence_debut');
+
         return [
             'motif_id' => 'required|exists:motifs,id',
             'user_id_salarie' => 'required|exists:users,id',

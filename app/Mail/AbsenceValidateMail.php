@@ -2,19 +2,21 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use App\Models\Absence;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Envelope;
 
 class AbsenceValidateMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $absence;
+    public Absence $absence;
+    public User $user;
     /**
      * Create a new message instance.
      */
@@ -53,11 +55,15 @@ class AbsenceValidateMail extends Mailable
         return [];
     }
 
+    /**
+     * Summary of build
+     * @return AbsenceValidateMail|void
+     */
     public function build()
     {
-        if (Auth::user()->isA('admin')) {
+        if (Auth::user()->isAn('admin')) {
             return $this->markdown('emails.absence_validate')
-                ->subject('Validation de l\'absence de ' . $this->absence->user->nom)
+                ->subject('Validation de l\'absence de '. Auth::user()->prenom .' '. Auth::user()->nom)
                 ->with('absence', $this->absence); // Passe les données de l'absence à la vue
         }
     }

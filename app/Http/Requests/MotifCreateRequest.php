@@ -6,9 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class MotifCreateRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return true;

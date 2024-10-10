@@ -60,7 +60,7 @@ class AbsenceMail extends Mailable
     public function build()
     {
         return $this->markdown('emails.absence')
-            ->subject('Validation de l\'absence de ' . $this->absence->user->nom)
+            ->subject('Validation de l\'absence de '.$this->absence->user->nom)
             ->with('absence', $this->absence); // Passe les données de l'absence à la vue
     }
 }

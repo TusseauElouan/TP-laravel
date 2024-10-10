@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
@@ -28,10 +26,9 @@ return new class extends Migration
         Bouncer::allow('admin')->to('absence-retrieve');
         Bouncer::allow('admin')->to('absence-delete');
 
-        $user = User::create(['nom'=> 'admin','prenom'=> 'admin', 'email' => 'admin@gmail.com', 'password' => 'password', 'isAdmin'=> true]);
-        Bouncer::assign('admin')->to($user);
+        $user = User::create(['nom' => 'admin', 'prenom' => 'admin', 'email' => 'admin@gmail.com', 'password' => 'password', 'isAdmin' => 1]);
+        $user->assign('admin');
     }
-
 
     /**
      * Reverse the migrations.
@@ -69,4 +66,3 @@ return new class extends Migration
         Bouncer::role()->where('name', 'admin')->delete();
     }
 };
-

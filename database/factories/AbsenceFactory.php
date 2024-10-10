@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Motif;
-use Faker\Provider\DateTime;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -30,7 +29,7 @@ class AbsenceFactory extends Factory
             'date_absence_debut' => $startDate,
             'date_absence_fin' => $endDate,
             'isValidated' => false,
-            'is_deleted' => false
+            'is_deleted' => false,
         ];
     }
 }
