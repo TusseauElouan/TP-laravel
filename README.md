@@ -144,7 +144,7 @@ php artisan db:seed
 
 ### Problèmes avec Vite
 
-Si des erreurs liées à Vite apparaissent :
+Si des erreurs liées à Vite apparaissent lors du chargement d'une page :
 
 ```bash
 rm -rf node_modules
@@ -152,7 +152,7 @@ npm install
 npm run build
 ```
 
-> **Note** : Installez Node.js si nécessaire. Consultez [ce guide](https://kinsta.com/fr/blog/comment-installer-node-js/) pour plus de détails.
+> **Note** : Si vous avez des erreurs avec ces lignes de commandes, il faut installer Node.js sur Windows, consultez [ce guide](https://kinsta.com/fr/blog/comment-installer-node-js/) pour plus de détails. Dans le terminal en administrateur, déplacez-vous au dossier Homestead et executer les deux dernières commandes indiqué au-dessus. 
 
 ## Compte Admin
 
