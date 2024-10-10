@@ -1,6 +1,8 @@
 {
     "(and :count more error)": "(and :count more error)",
     "(and :count more errors)": "(and :count more error)|(and :count more errors)|(and :count more errors)",
+    "A":"a",
+    "An": "an",
     "Absences List" : "Absences List",
     "Absence" : "Absence",
     "Absences" : "Absences",

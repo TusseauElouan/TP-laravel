@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Modifier un motif')
+@section('title', __('Edit') + ' ' + __('A') + ' ' + __('Reason'))
 
 @section('content')
 <div class="grid place-content-center text-center h-screen">

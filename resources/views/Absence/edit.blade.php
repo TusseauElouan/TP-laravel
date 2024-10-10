@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Modifier une absence')
+@section('title', __('Edit') + ' ' + __('An') + ' ' + __('Absence'))
 
 @section('content')
 

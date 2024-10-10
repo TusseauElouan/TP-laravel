@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Modifier les informations d\'un utilisateur')
+@section('title', __('Edit') + ' ' + __('User details'));
 
 @section('content')
 

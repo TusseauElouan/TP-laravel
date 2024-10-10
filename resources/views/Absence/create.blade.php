@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Ajouter une absence')
+@section('title', __('Add') + ' ' + __('An') + ' ' + __('Absence'))
 
 @section('content')
 <div class="grid place-content-center text-center h-screen">
