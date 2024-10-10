@@ -15,6 +15,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class AbsenceController extends Controller
 {
@@ -99,6 +100,9 @@ class AbsenceController extends Controller
      */
     public function edit(Absence $absence)
     {
+        if (Auth::check() && !Auth::user()->isAdmin){
+            return redirect()->route('absence.index')->with('error',__('Not accessible to employee'));
+        }
         if ($absence->isValidated) {
             return redirect()->route('absence.index')->with('error', 'Cette absence est déjà validée.');
         }

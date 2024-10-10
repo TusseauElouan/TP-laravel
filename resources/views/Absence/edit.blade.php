@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', __('Edit') + ' ' + __('An') + ' ' + __('Absence'))
+@section('title', __('Edit an absence'))
 
 @section('content')
 
@@ -15,11 +15,11 @@
             <label for="user_id_salarie" class="text-xl mx-1 mb-2">{{__('User')}}</label>
             <select required id="user_id_salarie" name="user_id_salarie" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
                 @if (Auth::check() && Auth::user()->isA('admin'))
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->nom }} {{ $user->prenom }}</option>
-                @endforeach
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}">{{ $user->nom }} {{ $user->prenom }}</option>
+                    @endforeach
                 @else
-                <option value="{{ Auth::user()->id }}">{{ Auth::user()->nom }} {{ Auth::user()->prenom }}</option>
+                    <option value="{{ Auth::user()->id }}">{{ Auth::user()->nom }} {{ Auth::user()->prenom }}</option>
                 @endif
             </select>
             <!-- Message d'erreur pour l'utilisateur -->
@@ -29,7 +29,7 @@
         </div>
 
         <!-- Sélection du motif -->
-        @if (Auth::check() && Auth::user()->isA('admin'))
+        @if (Auth::check() && Auth::user()->isAn('admin'))
             <div class="flex flex-col">
                 <label for="motif_id" class="text-xl mx-1 mb-2">{{__('Reason')}}</label>
                 <select id="motif_id" name="motif_id" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
@@ -49,7 +49,7 @@
                 <label for="motif_id" class="text-xl mx-1 mb-2">{{__('Reason')}}</label>
                 <select id="motif_id" name="motif_id" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
                     @foreach($motifs as $motif)
-                        @if ($motif->is_accessible_salaries)
+                        @if ($motif->is_accessible_salarie)
                             <option value="{{ $motif->id }}" {{ $motif->id == $absence->motif_id ? 'selected' : '' }}>
                                 {{ $motif->libelle }}
                             </option>

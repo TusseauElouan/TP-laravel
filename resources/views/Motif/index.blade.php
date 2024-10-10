@@ -15,7 +15,6 @@
 @endif
 @auth
 <h1 class="font-bold text-center text-5xl m-4">{{__('Reasons List')}}</h1>
-@if (Auth::check() && Auth::user()->isA('admin'))
 <div class="flex justify-end">
     <a href="{{route('motif.create')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 mr-[12.5%] mb-5">{{__('Add a reason')}}</a>
 </div>
@@ -55,14 +54,8 @@
         </tbody>
     </table>
 </div>
-@endauth
 
-@if(!Auth::check())
 <div class="w-full flex justify-center mt-5">
-    <p>Vous n'êtes pas connecté.</p>
-</div>
-@endif
-<div class="w-full flex justify-center mt-5">
-    <a href="{{route('accueil')}}" class="bg-gray-900 text-white p-2 rounded-md hover:shadow-2xl shadow-black">Retour</a>
+    <a href="{{route('accueil')}}" class="bg-gray-900 text-white p-2 rounded-md hover:shadow-2xl shadow-black">{{__('Go back')}}</a>
 </div>
 @endsection

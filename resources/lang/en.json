@@ -28,6 +28,8 @@
     "Delete": "Delete",
     "Delete Account": "Delete Account",
     "Edit" : "Edit",
+    "Edit an absence": "Edit an absence",
+    "Edit a reason": "Edit a reason",
     "Email": "Email",
     "email": "The :attribute must be a valid email address.",
     "Email Password Reset Link": "Email Password Reset Link",

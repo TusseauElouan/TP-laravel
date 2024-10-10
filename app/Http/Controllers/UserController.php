@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Absence;
 use App\Models\User;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use App\Models\Absence;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\Factory;
 
 class UserController extends Controller
 {
@@ -47,12 +48,15 @@ class UserController extends Controller
 
     /**
      * Summary of show
-     *
-     *
-     * @return Factory|View
+     * @param int $id
+     * @return Factory|View|RedirectResponse
      */
     public function show(int $id)
     {
+        if (Auth::check() && !Auth::user()->isAdmin)
+        {
+            return redirect()->route('user.index')->with('error',__('Not accessible to employee'));
+        }
         $user = User::findOrFail($id);
         $absences = Absence::with('motif')->where('user_id_salarie', $user->id)->get();
 
