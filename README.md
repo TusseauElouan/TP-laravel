@@ -144,7 +144,7 @@ php artisan db:seed
 
 ### Problèmes avec Vite
 
-Si des erreurs liées à Vite apparaissent lors du chargement d'une page :
+Si des erreurs liées à Vite apparaissent lors du chargement d'une page, executez ces commandes dans le dossier Homestead dans le terminal en ssh :
 
 ```bash
 rm -rf node_modules
@@ -152,11 +152,11 @@ npm install
 npm run build
 ```
 
-> **Note** : Si vous avez des erreurs avec ces lignes de commandes, il faut installer Node.js sur Windows, consultez [ce guide](https://kinsta.com/fr/blog/comment-installer-node-js/) pour plus de détails. Dans le terminal en administrateur, déplacez-vous au dossier Homestead et executer les deux dernières commandes indiqué au-dessus. 
+> **Note** : Si vous avez des erreurs avec ces lignes de commandes, il faut installer Node.js sur Windows, consultez [ce guide](https://kinsta.com/fr/blog/comment-installer-node-js/) pour plus de détails. Une fois intallé, dans le terminal en administrateur, déplacez-vous au dossier Homestead et executer les deux dernières commandes indiqué au-dessus. 
 
 ## Compte Admin
 
-Un compte administrateur est déjà configuré :
+Un compte administrateur est déjà configuré au moment de la migration :
 
 - **Email** : admin@gmail.com
 - **Mot de passe** : password
