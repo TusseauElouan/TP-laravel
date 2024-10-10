@@ -122,7 +122,7 @@ composer update
 
 ### Fichier .env
 
-Créez un fichier `.env` s'il n'existe pas et configurez-le comme suit :
+Créez un fichier `.env` s'il n'existe pas et configurez-le en utilisant les bonnes variables comme suit :
 
 ```env
 APP_NAME="Cours Laravel"
