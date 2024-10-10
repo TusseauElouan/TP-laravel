@@ -14,8 +14,8 @@ use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class AbsenceController extends Controller
 {
@@ -26,7 +26,7 @@ class AbsenceController extends Controller
      */
     public function GetMotifsCached()
     {
-        $motifs = new Motif;
+        $motifs = new Motif();
 
         return $motifs->getMotifsCache();
     }
@@ -61,12 +61,11 @@ class AbsenceController extends Controller
     /**
      * Summary of store
      *
-     *
      * @return RedirectResponse
      */
     public function store(AbsenceCreateRequest $validatedData)
     {
-        $absence = new Absence;
+        $absence = new Absence();
         $absence->user_id_salarie = $validatedData['user_id_salarie'];
         $absence->motif_id = $validatedData['motif_id'];
         $absence->date_absence_debut = $validatedData['date_absence_debut'];
@@ -84,7 +83,6 @@ class AbsenceController extends Controller
     /**
      * Summary of show
      *
-     *
      * @return void
      */
     public function show(Absence $absence)
@@ -95,13 +93,12 @@ class AbsenceController extends Controller
     /**
      * Summary of edit
      *
-     *
      * @return Factory|RedirectResponse|View
      */
     public function edit(Absence $absence)
     {
-        if (Auth::check() && !Auth::user()->isAdmin){
-            return redirect()->route('absence.index')->with('error',__('Not accessible to employee'));
+        if (Auth::check() && ! Auth::user()->isAdmin) {
+            return redirect()->route('absence.index')->with('error', __('Not accessible to employee'));
         }
         if ($absence->isValidated) {
             return redirect()->route('absence.index')->with('error', 'Cette absence est déjà validée.');
@@ -114,7 +111,6 @@ class AbsenceController extends Controller
 
     /**
      * Summary of update
-     *
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -141,7 +137,6 @@ class AbsenceController extends Controller
     /**
      * Summary of destroy
      *
-     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Absence $absence)
@@ -154,7 +149,6 @@ class AbsenceController extends Controller
 
     /**
      * Summary of validate
-     *
      *
      * @return RedirectResponse
      */
@@ -171,7 +165,6 @@ class AbsenceController extends Controller
     /**
      * Summary of restore
      *
-     *
      * @return RedirectResponse
      */
     public function restore(Absence $absence)
@@ -184,7 +177,6 @@ class AbsenceController extends Controller
 
     /**
      * Summary of showValidationPage
-     *
      *
      * @return Factory|View
      */

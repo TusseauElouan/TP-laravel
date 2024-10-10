@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'set.language' => LangueMiddleware::class
+            'set.language' => LangueMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

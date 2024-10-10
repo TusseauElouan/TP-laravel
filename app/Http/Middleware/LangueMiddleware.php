@@ -11,13 +11,13 @@ class LangueMiddleware
     /**
      * Handle an incoming request.
      *
-     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
         $locale = $request->cookie('locale', config('app.locale'));
         App::setLocale($locale);
+
         return $next($request);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Absence;
-use Illuminate\Http\Request;
-use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\RedirectResponse;
+use App\Models\User;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -41,21 +41,21 @@ class UserController extends Controller
     /**
      * Summary of store
      *
-     *
      * @return void
      */
-    public function store(Request $request) {}
+    public function store(Request $request)
+    {
+    }
 
     /**
      * Summary of show
-     * @param int $id
+     *
      * @return Factory|View|RedirectResponse
      */
     public function show(int $id)
     {
-        if (Auth::check() && !Auth::user()->isAdmin)
-        {
-            return redirect()->route('user.index')->with('error',__('Not accessible to employee'));
+        if (Auth::check() && ! Auth::user()->isAdmin) {
+            return redirect()->route('user.index')->with('error', __('Not accessible to employee'));
         }
         $user = User::findOrFail($id);
         $absences = Absence::with('motif')->where('user_id_salarie', $user->id)->get();
@@ -66,7 +66,6 @@ class UserController extends Controller
     /**
      * Summary of edit
      *
-     *
      * @return Factory|View
      */
     public function edit(User $user)
@@ -76,7 +75,6 @@ class UserController extends Controller
 
     /**
      * Summary of update
-     *
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -94,8 +92,9 @@ class UserController extends Controller
     /**
      * Summary of destroy
      *
-     *
      * @return void
      */
-    public function destroy(User $motif) {}
+    public function destroy(User $motif)
+    {
+    }
 }

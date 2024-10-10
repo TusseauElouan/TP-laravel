@@ -21,7 +21,7 @@ class MotifController extends Controller
      */
     public function GetMotifsCached()
     {
-        $motifs = new Motif;
+        $motifs = new Motif();
 
         return $motifs->getMotifsCache();
     }
@@ -63,7 +63,6 @@ class MotifController extends Controller
     /**
      * Summary of store
      *
-     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(MotifCreateRequest $request)
@@ -72,7 +71,7 @@ class MotifController extends Controller
         $validatedData = $request->validated();
 
         // Création du motif
-        $motif = new Motif;
+        $motif = new Motif();
         $motif->libelle = $validatedData['libelle'];
         $motif->is_accessible_salarie = $validatedData['is_accessible_salarie'] ?? false;
         $motif->save();
@@ -86,7 +85,6 @@ class MotifController extends Controller
     /**
      * Summary of show
      *
-     *
      * @return mixed
      */
     public function show(Motif $motif)
@@ -97,7 +95,6 @@ class MotifController extends Controller
     /**
      * Summary of edit
      *
-     *
      * @return Factory|RedirectResponse|View
      */
     public function edit(Motif $motif)
@@ -107,7 +104,6 @@ class MotifController extends Controller
 
     /**
      * Summary of update
-     *
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -129,7 +125,6 @@ class MotifController extends Controller
 
     /**
      * Summary of destroy
-     *
      *
      * @return \Illuminate\Http\RedirectResponse
      */

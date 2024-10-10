@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 11.22.0.
+ * Generated for Laravel 11.27.1.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -1425,7 +1425,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Fire all of the after resolving attribute callbacks.
          *
-         * @param \ReflectionAttribute[] $abstract
+         * @param \ReflectionAttribute[] $attributes
          * @param mixed $object
          * @return void 
          * @static 
@@ -3745,10 +3745,9 @@ namespace Illuminate\Support\Facades {
                     /**
          * Retrieve an item from the cache by key.
          *
-         * @template TCacheValue
          * @param array|string $key
-         * @param \Illuminate\Cache\TCacheValue|\Illuminate\Cache\(\Closure():  TCacheValue)  $default
-         * @return \Illuminate\Cache\(TCacheValue is null ? mixed : TCacheValue)
+         * @param mixed $default
+         * @return mixed 
          * @static 
          */        public static function get($key, $default = null)
         {
@@ -3787,10 +3786,9 @@ namespace Illuminate\Support\Facades {
                     /**
          * Retrieve an item from the cache and delete it.
          *
-         * @template TCacheValue
          * @param array|string $key
-         * @param \Illuminate\Cache\TCacheValue|\Illuminate\Cache\(\Closure():  TCacheValue)  $default
-         * @return \Illuminate\Cache\(TCacheValue is null ? mixed : TCacheValue)
+         * @param mixed $default
+         * @return mixed 
          * @static 
          */        public static function pull($key, $default = null)
         {
@@ -3946,6 +3944,21 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Cache\Repository $instance */
                         return $instance->rememberForever($key, $callback);
+        }
+                    /**
+         * Retrieve an item from the cache by key, refreshing it in the background if it is stale.
+         *
+         * @template TCacheValue
+         * @param string $key
+         * @param \Illuminate\Cache\array{  0: \DateTimeInterface|\DateInterval|int, 1: \DateTimeInterface|\DateInterval|int }  $ttl
+         * @param \Illuminate\Cache\(callable():  TCacheValue)  $callback
+         * @param \Illuminate\Cache\array{  seconds?: int, owner?: string }|null  $lock
+         * @return \Illuminate\Cache\TCacheValue 
+         * @static 
+         */        public static function flexible($key, $ttl, $callback, $lock = null)
+        {
+                        /** @var \Illuminate\Cache\Repository $instance */
+                        return $instance->flexible($key, $ttl, $callback, $lock);
         }
                     /**
          * Remove an item from the cache.
@@ -4194,7 +4207,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function lock($name, $seconds = 0, $owner = null)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\FileStore $instance */
                         return $instance->lock($name, $seconds, $owner);
         }
                     /**
@@ -4206,19 +4219,8 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function restoreLock($name, $owner)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\FileStore $instance */
                         return $instance->restoreLock($name, $owner);
-        }
-                    /**
-         * Remove an item from the cache if it is expired.
-         *
-         * @param string $key
-         * @return bool 
-         * @static 
-         */        public static function forgetIfExpired($key)
-        {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
-                        return $instance->forgetIfExpired($key);
         }
                     /**
          * Remove all items from the cache.
@@ -4227,29 +4229,61 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function flush()
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\FileStore $instance */
                         return $instance->flush();
         }
                     /**
-         * Get the underlying database connection.
+         * Get the full path for the given cache key.
          *
-         * @return \Illuminate\Database\MySqlConnection 
+         * @param string $key
+         * @return string 
          * @static 
-         */        public static function getConnection()
+         */        public static function path($key)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
-                        return $instance->getConnection();
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->path($key);
         }
                     /**
-         * Specify the name of the connection that should be used to manage locks.
+         * Get the Filesystem instance.
          *
-         * @param \Illuminate\Database\ConnectionInterface $connection
-         * @return \Illuminate\Cache\DatabaseStore 
+         * @return \Illuminate\Filesystem\Filesystem 
          * @static 
-         */        public static function setLockConnection($connection)
+         */        public static function getFilesystem()
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
-                        return $instance->setLockConnection($connection);
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->getFilesystem();
+        }
+                    /**
+         * Get the working directory of the cache.
+         *
+         * @return string 
+         * @static 
+         */        public static function getDirectory()
+        {
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->getDirectory();
+        }
+                    /**
+         * Set the working directory of the cache.
+         *
+         * @param string $directory
+         * @return \Illuminate\Cache\FileStore 
+         * @static 
+         */        public static function setDirectory($directory)
+        {
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->setDirectory($directory);
+        }
+                    /**
+         * Set the cache directory where locks should be stored.
+         *
+         * @param string|null $lockDirectory
+         * @return \Illuminate\Cache\FileStore 
+         * @static 
+         */        public static function setLockDirectory($lockDirectory)
+        {
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->setLockDirectory($lockDirectory);
         }
                     /**
          * Get the cache key prefix.
@@ -4258,19 +4292,149 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getPrefix()
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\FileStore $instance */
                         return $instance->getPrefix();
         }
+            }
+            /**
+     * 
+     *
+     * @method static array run(\Closure|array $tasks)
+     * @method static \Illuminate\Support\Defer\DeferredCallback defer(\Closure|array $tasks)
+     * @see \Illuminate\Concurrency\ConcurrencyManager
+     */        class Concurrency {
                     /**
-         * Set the cache key prefix.
+         * Get a driver instance by name.
          *
-         * @param string $prefix
+         * @param string|null $name
+         * @return mixed 
+         * @static 
+         */        public static function driver($name = null)
+        {
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        return $instance->driver($name);
+        }
+                    /**
+         * Create an instance of the process concurrency driver.
+         *
+         * @param array $config
+         * @return \Illuminate\Concurrency\ProcessDriver 
+         * @static 
+         */        public static function createProcessDriver($config)
+        {
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        return $instance->createProcessDriver($config);
+        }
+                    /**
+         * Create an instance of the fork concurrency driver.
+         *
+         * @param array $config
+         * @return \Illuminate\Concurrency\ForkDriver 
+         * @throws \RuntimeException
+         * @static 
+         */        public static function createForkDriver($config)
+        {
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        return $instance->createForkDriver($config);
+        }
+                    /**
+         * Create an instance of the sync concurrency driver.
+         *
+         * @param array $config
+         * @return \Illuminate\Concurrency\SyncDriver 
+         * @static 
+         */        public static function createSyncDriver($config)
+        {
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        return $instance->createSyncDriver($config);
+        }
+                    /**
+         * Get the default instance name.
+         *
+         * @return string 
+         * @static 
+         */        public static function getDefaultInstance()
+        {
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        return $instance->getDefaultInstance();
+        }
+                    /**
+         * Set the default instance name.
+         *
+         * @param string $name
          * @return void 
          * @static 
-         */        public static function setPrefix($prefix)
+         */        public static function setDefaultInstance($name)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
-                        $instance->setPrefix($prefix);
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        $instance->setDefaultInstance($name);
+        }
+                    /**
+         * Get the instance specific configuration.
+         *
+         * @param string $name
+         * @return array 
+         * @static 
+         */        public static function getInstanceConfig($name)
+        {
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        return $instance->getInstanceConfig($name);
+        }
+                    /**
+         * Get an instance by name.
+         *
+         * @param string|null $name
+         * @return mixed 
+         * @static 
+         */        public static function instance($name = null)
+        {            //Method inherited from \Illuminate\Support\MultipleInstanceManager         
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        return $instance->instance($name);
+        }
+                    /**
+         * Unset the given instances.
+         *
+         * @param array|string|null $name
+         * @return \Illuminate\Concurrency\ConcurrencyManager 
+         * @static 
+         */        public static function forgetInstance($name = null)
+        {            //Method inherited from \Illuminate\Support\MultipleInstanceManager         
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        return $instance->forgetInstance($name);
+        }
+                    /**
+         * Disconnect the given instance and remove from local cache.
+         *
+         * @param string|null $name
+         * @return void 
+         * @static 
+         */        public static function purge($name = null)
+        {            //Method inherited from \Illuminate\Support\MultipleInstanceManager         
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        $instance->purge($name);
+        }
+                    /**
+         * Register a custom instance creator Closure.
+         *
+         * @param string $name
+         * @param \Closure $callback
+         * @return \Illuminate\Concurrency\ConcurrencyManager 
+         * @static 
+         */        public static function extend($name, $callback)
+        {            //Method inherited from \Illuminate\Support\MultipleInstanceManager         
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        return $instance->extend($name, $callback);
+        }
+                    /**
+         * Set the application instance used by the manager.
+         *
+         * @param \Illuminate\Contracts\Foundation\Application $app
+         * @return \Illuminate\Concurrency\ConcurrencyManager 
+         * @static 
+         */        public static function setApplication($app)
+        {            //Method inherited from \Illuminate\Support\MultipleInstanceManager         
+                        /** @var \Illuminate\Concurrency\ConcurrencyManager $instance */
+                        return $instance->setApplication($app);
         }
             }
             /**
@@ -6414,8 +6578,9 @@ namespace Illuminate\Support\Facades {
                     /**
          * Set the table prefix and return the grammar.
          *
-         * @param \Illuminate\Database\Grammar $grammar
-         * @return \Illuminate\Database\Grammar 
+         * @template TGrammar of \Illuminate\Database\Grammar
+         * @param \Illuminate\Database\TGrammar $grammar
+         * @return \Illuminate\Database\TGrammar 
          * @static 
          */        public static function withTablePrefix($grammar)
         {            //Method inherited from \Illuminate\Database\Connection         
@@ -6437,7 +6602,7 @@ namespace Illuminate\Support\Facades {
          * Get the connection resolver for the given driver.
          *
          * @param string $driver
-         * @return mixed 
+         * @return \Closure|null 
          * @static 
          */        public static function getResolver($driver)
         {            //Method inherited from \Illuminate\Database\Connection         
@@ -7522,7 +7687,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Define a new ability.
          *
-         * @param string $ability
+         * @param \BackedEnum|string $ability
          * @param callable|array|string $callback
          * @return \Illuminate\Auth\Access\Gate 
          * @throws \InvalidArgumentException
@@ -7582,7 +7747,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Determine if all of the given abilities should be granted for the current user.
          *
-         * @param \Illuminate\Auth\Access\iterable|string $ability
+         * @param \Illuminate\Auth\Access\iterable|\BackedEnum|string $ability
          * @param array|mixed $arguments
          * @return bool 
          * @static 
@@ -7594,7 +7759,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Determine if any of the given abilities should be denied for the current user.
          *
-         * @param \Illuminate\Auth\Access\iterable|string $ability
+         * @param \Illuminate\Auth\Access\iterable|\BackedEnum|string $ability
          * @param array|mixed $arguments
          * @return bool 
          * @static 
@@ -7606,7 +7771,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Determine if all of the given abilities should be granted for the current user.
          *
-         * @param \Illuminate\Auth\Access\iterable|string $abilities
+         * @param \Illuminate\Auth\Access\iterable|\BackedEnum|string $abilities
          * @param array|mixed $arguments
          * @return bool 
          * @static 
@@ -7618,7 +7783,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Determine if any one of the given abilities should be granted for the current user.
          *
-         * @param \Illuminate\Auth\Access\iterable|string $abilities
+         * @param \Illuminate\Auth\Access\iterable|\BackedEnum|string $abilities
          * @param array|mixed $arguments
          * @return bool 
          * @static 
@@ -7630,7 +7795,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Determine if all of the given abilities should be denied for the current user.
          *
-         * @param \Illuminate\Auth\Access\iterable|string $abilities
+         * @param \Illuminate\Auth\Access\iterable|\BackedEnum|string $abilities
          * @param array|mixed $arguments
          * @return bool 
          * @static 
@@ -7642,7 +7807,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Determine if the given ability should be granted for the current user.
          *
-         * @param string $ability
+         * @param \BackedEnum|string $ability
          * @param array|mixed $arguments
          * @return \Illuminate\Auth\Access\Response 
          * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -7655,7 +7820,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Inspect the user for the given ability.
          *
-         * @param string $ability
+         * @param \BackedEnum|string $ability
          * @param array|mixed $arguments
          * @return \Illuminate\Auth\Access\Response 
          * @static 
@@ -8951,7 +9116,7 @@ namespace Illuminate\Support\Facades {
      * @method static \Illuminate\Contracts\View\Factory getViewFactory()
      * @method static void setSymfonyTransport(\Symfony\Component\Mailer\Transport\TransportInterface $transport)
      * @method static \Illuminate\Mail\Mailer setQueue(\Illuminate\Contracts\Queue\Factory $queue)
-     * @method static void macro(string $name, object|callable $macro, object|callable $macro = null)
+     * @method static void macro(string $name, object|callable $macro)
      * @method static void mixin(object $mixin, bool $replace = true)
      * @method static bool hasMacro(string $name)
      * @method static void flushMacros()
@@ -10616,7 +10781,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Register a named limiter configuration.
          *
-         * @param string $name
+         * @param \BackedEnum|\UnitEnum|string $name
          * @param \Closure $callback
          * @return \Illuminate\Cache\RateLimiter 
          * @static 
@@ -10628,7 +10793,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Get the given named rate limiter.
          *
-         * @param string $name
+         * @param \BackedEnum|\UnitEnum|string $name
          * @return \Closure|null 
          * @static 
          */        public static function limiter($name)
@@ -14094,7 +14259,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Alias for the "currentRouteUses" method.
          *
-         * @param array $patterns
+         * @param array|string $patterns
          * @return bool 
          * @static 
          */        public static function uses(...$patterns)
@@ -14449,6 +14614,17 @@ namespace Illuminate\Support\Facades {
                         return $instance->dropDatabaseIfExists($name);
         }
                     /**
+         * Determine if the given table exists.
+         *
+         * @param string $table
+         * @return bool 
+         * @static 
+         */        public static function hasTable($table)
+        {
+                        /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+                        return $instance->hasTable($table);
+        }
+                    /**
          * Get the tables for the database.
          *
          * @return array 
@@ -14559,17 +14735,6 @@ namespace Illuminate\Support\Facades {
          */        public static function morphUsingUlids()
         {            //Method inherited from \Illuminate\Database\Schema\Builder         
                         \Illuminate\Database\Schema\MySqlBuilder::morphUsingUlids();
-        }
-                    /**
-         * Determine if the given table exists.
-         *
-         * @param string $table
-         * @return bool 
-         * @static 
-         */        public static function hasTable($table)
-        {            //Method inherited from \Illuminate\Database\Schema\Builder         
-                        /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
-                        return $instance->hasTable($table);
         }
                     /**
          * Determine if the given view exists.
@@ -15610,7 +15775,7 @@ namespace Illuminate\Support\Facades {
          * Get a filesystem instance.
          *
          * @param string|null $name
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
          * @static 
          */        public static function drive($name = null)
         {
@@ -15621,7 +15786,7 @@ namespace Illuminate\Support\Facades {
          * Get a filesystem instance.
          *
          * @param string|null $name
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
          * @static 
          */        public static function disk($name = null)
         {
@@ -15642,7 +15807,7 @@ namespace Illuminate\Support\Facades {
          * Build an on-demand disk.
          *
          * @param string|array $config
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
          * @static 
          */        public static function build($config)
         {
@@ -15653,18 +15818,19 @@ namespace Illuminate\Support\Facades {
          * Create an instance of the local driver.
          *
          * @param array $config
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @param string $name
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
          * @static 
-         */        public static function createLocalDriver($config)
+         */        public static function createLocalDriver($config, $name = 'local')
         {
                         /** @var \Illuminate\Filesystem\FilesystemManager $instance */
-                        return $instance->createLocalDriver($config);
+                        return $instance->createLocalDriver($config, $name);
         }
                     /**
          * Create an instance of the ftp driver.
          *
          * @param array $config
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
          * @static 
          */        public static function createFtpDriver($config)
         {
@@ -15675,7 +15841,7 @@ namespace Illuminate\Support\Facades {
          * Create an instance of the sftp driver.
          *
          * @param array $config
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
          * @static 
          */        public static function createSftpDriver($config)
         {
@@ -15697,7 +15863,7 @@ namespace Illuminate\Support\Facades {
          * Create a scoped driver.
          *
          * @param array $config
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
          * @static 
          */        public static function createScopedDriver($config)
         {
@@ -15782,37 +15948,83 @@ namespace Illuminate\Support\Facades {
                         return $instance->setApplication($app);
         }
                     /**
+         * Determine if temporary URLs can be generated.
+         *
+         * @return bool 
+         * @static 
+         */        public static function providesTemporaryUrls()
+        {
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
+                        return $instance->providesTemporaryUrls();
+        }
+                    /**
+         * Get a temporary URL for the file at the given path.
+         *
+         * @param string $path
+         * @param \DateTimeInterface $expiration
+         * @param array $options
+         * @return string 
+         * @static 
+         */        public static function temporaryUrl($path, $expiration, $options = [])
+        {
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
+                        return $instance->temporaryUrl($path, $expiration, $options);
+        }
+                    /**
+         * Specify the name of the disk the adapter is managing.
+         *
+         * @param string $disk
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
+         * @static 
+         */        public static function diskName($disk)
+        {
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
+                        return $instance->diskName($disk);
+        }
+                    /**
+         * Indiate that signed URLs should serve the corresponding files.
+         *
+         * @param bool $serve
+         * @param \Closure|null $urlGeneratorResolver
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
+         * @static 
+         */        public static function shouldServeSignedUrls($serve = true, $urlGeneratorResolver = null)
+        {
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
+                        return $instance->shouldServeSignedUrls($serve, $urlGeneratorResolver);
+        }
+                    /**
          * Assert that the given file or directory exists.
          *
          * @param string|array $path
          * @param string|null $content
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
          * @static 
          */        public static function assertExists($path, $content = null)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->assertExists($path, $content);
         }
                     /**
          * Assert that the given file or directory does not exist.
          *
          * @param string|array $path
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
          * @static 
          */        public static function assertMissing($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->assertMissing($path);
         }
                     /**
          * Assert that the given directory is empty.
          *
          * @param string $path
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
          * @static 
          */        public static function assertDirectoryEmpty($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->assertDirectoryEmpty($path);
         }
                     /**
@@ -15822,8 +16034,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function exists($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->exists($path);
         }
                     /**
@@ -15833,8 +16045,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function missing($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->missing($path);
         }
                     /**
@@ -15844,8 +16056,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function fileExists($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->fileExists($path);
         }
                     /**
@@ -15855,8 +16067,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function fileMissing($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->fileMissing($path);
         }
                     /**
@@ -15866,8 +16078,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function directoryExists($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->directoryExists($path);
         }
                     /**
@@ -15877,8 +16089,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function directoryMissing($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->directoryMissing($path);
         }
                     /**
@@ -15888,8 +16100,8 @@ namespace Illuminate\Support\Facades {
          * @return string 
          * @static 
          */        public static function path($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->path($path);
         }
                     /**
@@ -15899,8 +16111,8 @@ namespace Illuminate\Support\Facades {
          * @return string|null 
          * @static 
          */        public static function get($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->get($path);
         }
                     /**
@@ -15911,8 +16123,8 @@ namespace Illuminate\Support\Facades {
          * @return array|null 
          * @static 
          */        public static function json($path, $flags = 0)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->json($path, $flags);
         }
                     /**
@@ -15925,20 +16137,35 @@ namespace Illuminate\Support\Facades {
          * @return \Symfony\Component\HttpFoundation\StreamedResponse 
          * @static 
          */        public static function response($path, $name = null, $headers = [], $disposition = 'inline')
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->response($path, $name, $headers, $disposition);
+        }
+                    /**
+         * Create a streamed download response for a given file.
+         *
+         * @param \Illuminate\Http\Request $request
+         * @param string $path
+         * @param string|null $name
+         * @param array $headers
+         * @return \Symfony\Component\HttpFoundation\StreamedResponse 
+         * @static 
+         */        public static function serve($request, $path, $name = null, $headers = [])
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
+                        return $instance->serve($request, $path, $name, $headers);
         }
                     /**
          * Create a streamed download response for a given file.
          *
          * @param string $path
          * @param string|null $name
+         * @param array $headers
          * @return \Symfony\Component\HttpFoundation\StreamedResponse 
          * @static 
          */        public static function download($path, $name = null, $headers = [])
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->download($path, $name, $headers);
         }
                     /**
@@ -15950,8 +16177,8 @@ namespace Illuminate\Support\Facades {
          * @return string|bool 
          * @static 
          */        public static function put($path, $contents, $options = [])
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->put($path, $contents, $options);
         }
                     /**
@@ -15963,8 +16190,8 @@ namespace Illuminate\Support\Facades {
          * @return string|false 
          * @static 
          */        public static function putFile($path, $file = null, $options = [])
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->putFile($path, $file, $options);
         }
                     /**
@@ -15977,8 +16204,8 @@ namespace Illuminate\Support\Facades {
          * @return string|false 
          * @static 
          */        public static function putFileAs($path, $file, $name = null, $options = [])
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->putFileAs($path, $file, $name, $options);
         }
                     /**
@@ -15988,8 +16215,8 @@ namespace Illuminate\Support\Facades {
          * @return string 
          * @static 
          */        public static function getVisibility($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->getVisibility($path);
         }
                     /**
@@ -16000,8 +16227,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function setVisibility($path, $visibility)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->setVisibility($path, $visibility);
         }
                     /**
@@ -16014,8 +16241,8 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function prepend($path, $data, $separator = '
 ')
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->prepend($path, $data, $separator);
         }
                     /**
@@ -16028,8 +16255,8 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function append($path, $data, $separator = '
 ')
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->append($path, $data, $separator);
         }
                     /**
@@ -16039,8 +16266,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function delete($paths)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->delete($paths);
         }
                     /**
@@ -16051,8 +16278,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function copy($from, $to)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->copy($from, $to);
         }
                     /**
@@ -16063,8 +16290,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function move($from, $to)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->move($from, $to);
         }
                     /**
@@ -16074,8 +16301,8 @@ namespace Illuminate\Support\Facades {
          * @return int 
          * @static 
          */        public static function size($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->size($path);
         }
                     /**
@@ -16085,8 +16312,8 @@ namespace Illuminate\Support\Facades {
          * @throws UnableToProvideChecksum
          * @static 
          */        public static function checksum($path, $options = [])
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->checksum($path, $options);
         }
                     /**
@@ -16096,8 +16323,8 @@ namespace Illuminate\Support\Facades {
          * @return string|false 
          * @static 
          */        public static function mimeType($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->mimeType($path);
         }
                     /**
@@ -16107,8 +16334,8 @@ namespace Illuminate\Support\Facades {
          * @return int 
          * @static 
          */        public static function lastModified($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->lastModified($path);
         }
                     /**
@@ -16118,8 +16345,8 @@ namespace Illuminate\Support\Facades {
          * @return resource|null The path resource or null on failure.
          * @static 
          */        public static function readStream($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->readStream($path);
         }
                     /**
@@ -16131,8 +16358,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function writeStream($path, $resource, $options = [])
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->writeStream($path, $resource, $options);
         }
                     /**
@@ -16143,33 +16370,9 @@ namespace Illuminate\Support\Facades {
          * @throws \RuntimeException
          * @static 
          */        public static function url($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->url($path);
-        }
-                    /**
-         * Determine if temporary URLs can be generated.
-         *
-         * @return bool 
-         * @static 
-         */        public static function providesTemporaryUrls()
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
-                        return $instance->providesTemporaryUrls();
-        }
-                    /**
-         * Get a temporary URL for the file at the given path.
-         *
-         * @param string $path
-         * @param \DateTimeInterface $expiration
-         * @param array $options
-         * @return string 
-         * @throws \RuntimeException
-         * @static 
-         */        public static function temporaryUrl($path, $expiration, $options = [])
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
-                        return $instance->temporaryUrl($path, $expiration, $options);
         }
                     /**
          * Get a temporary upload URL for the file at the given path.
@@ -16181,8 +16384,8 @@ namespace Illuminate\Support\Facades {
          * @throws \RuntimeException
          * @static 
          */        public static function temporaryUploadUrl($path, $expiration, $options = [])
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->temporaryUploadUrl($path, $expiration, $options);
         }
                     /**
@@ -16193,8 +16396,8 @@ namespace Illuminate\Support\Facades {
          * @return array 
          * @static 
          */        public static function files($directory = null, $recursive = false)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->files($directory, $recursive);
         }
                     /**
@@ -16204,8 +16407,8 @@ namespace Illuminate\Support\Facades {
          * @return array 
          * @static 
          */        public static function allFiles($directory = null)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->allFiles($directory);
         }
                     /**
@@ -16216,8 +16419,8 @@ namespace Illuminate\Support\Facades {
          * @return array 
          * @static 
          */        public static function directories($directory = null, $recursive = false)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->directories($directory, $recursive);
         }
                     /**
@@ -16227,8 +16430,8 @@ namespace Illuminate\Support\Facades {
          * @return array 
          * @static 
          */        public static function allDirectories($directory = null)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->allDirectories($directory);
         }
                     /**
@@ -16238,8 +16441,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function makeDirectory($path)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->makeDirectory($path);
         }
                     /**
@@ -16249,8 +16452,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function deleteDirectory($directory)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->deleteDirectory($directory);
         }
                     /**
@@ -16259,8 +16462,8 @@ namespace Illuminate\Support\Facades {
          * @return \League\Flysystem\FilesystemOperator 
          * @static 
          */        public static function getDriver()
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->getDriver();
         }
                     /**
@@ -16269,8 +16472,8 @@ namespace Illuminate\Support\Facades {
          * @return \League\Flysystem\FilesystemAdapter 
          * @static 
          */        public static function getAdapter()
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->getAdapter();
         }
                     /**
@@ -16279,9 +16482,20 @@ namespace Illuminate\Support\Facades {
          * @return array 
          * @static 
          */        public static function getConfig()
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->getConfig();
+        }
+                    /**
+         * Define a custom callback that generates file download responses.
+         *
+         * @param \Closure $callback
+         * @return void 
+         * @static 
+         */        public static function serveUsing($callback)
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
+                        $instance->serveUsing($callback);
         }
                     /**
          * Define a custom temporary URL builder callback.
@@ -16290,8 +16504,8 @@ namespace Illuminate\Support\Facades {
          * @return void 
          * @static 
          */        public static function buildTemporaryUrlsUsing($callback)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         $instance->buildTemporaryUrlsUsing($callback);
         }
                     /**
@@ -16306,7 +16520,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function when($value = null, $callback = null, $default = null)
         {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->when($value, $callback, $default);
         }
                     /**
@@ -16321,7 +16535,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function unless($value = null, $callback = null, $default = null)
         {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->unless($value, $callback, $default);
         }
                     /**
@@ -16333,8 +16547,8 @@ namespace Illuminate\Support\Facades {
          * @return void 
          * @static 
          */        public static function macro($name, $macro)
-        {
-                        \Illuminate\Filesystem\FilesystemAdapter::macro($name, $macro);
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        \Illuminate\Filesystem\LocalFilesystemAdapter::macro($name, $macro);
         }
                     /**
          * Mix another object into the class.
@@ -16345,8 +16559,8 @@ namespace Illuminate\Support\Facades {
          * @throws \ReflectionException
          * @static 
          */        public static function mixin($mixin, $replace = true)
-        {
-                        \Illuminate\Filesystem\FilesystemAdapter::mixin($mixin, $replace);
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        \Illuminate\Filesystem\LocalFilesystemAdapter::mixin($mixin, $replace);
         }
                     /**
          * Checks if macro is registered.
@@ -16355,8 +16569,8 @@ namespace Illuminate\Support\Facades {
          * @return bool 
          * @static 
          */        public static function hasMacro($name)
-        {
-                        return \Illuminate\Filesystem\FilesystemAdapter::hasMacro($name);
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        return \Illuminate\Filesystem\LocalFilesystemAdapter::hasMacro($name);
         }
                     /**
          * Flush the existing macros.
@@ -16364,8 +16578,8 @@ namespace Illuminate\Support\Facades {
          * @return void 
          * @static 
          */        public static function flushMacros()
-        {
-                        \Illuminate\Filesystem\FilesystemAdapter::flushMacros();
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        \Illuminate\Filesystem\LocalFilesystemAdapter::flushMacros();
         }
                     /**
          * Dynamically handle calls to the class.
@@ -16376,8 +16590,8 @@ namespace Illuminate\Support\Facades {
          * @throws \BadMethodCallException
          * @static 
          */        public static function macroCall($method, $parameters)
-        {
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
                         return $instance->macroCall($method, $parameters);
         }
             }
@@ -16637,7 +16851,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Format the array of URL parameters.
          *
-         * @param mixed|array $parameters
+         * @param mixed $parameters
          * @return array 
          * @static 
          */        public static function formatParameters($parameters)
@@ -17250,6 +17464,17 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\View\Factory $instance */
                         $instance->addLocation($location);
+        }
+                    /**
+         * Prepend a location to the array of view locations.
+         *
+         * @param string $location
+         * @return void 
+         * @static 
+         */        public static function prependLocation($location)
+        {
+                        /** @var \Illuminate\View\Factory $instance */
+                        $instance->prependLocation($location);
         }
                     /**
          * Add a new namespace to the loader.
@@ -18233,6 +18458,464 @@ namespace Illuminate\Support\Facades {
             }
     }
 
+namespace Silber\Bouncer {
+            /**
+     * 
+     *
+     * @see \Silber\Bouncer\Bouncer
+     */        class BouncerFacade {
+                    /**
+         * Create a new Bouncer instance.
+         *
+         * @param mixed $user
+         * @return static 
+         * @static 
+         */        public static function create($user = null)
+        {
+                        return \Silber\Bouncer\Bouncer::create($user);
+        }
+                    /**
+         * Create a bouncer factory instance.
+         *
+         * @param mixed $user
+         * @return \Silber\Bouncer\Factory 
+         * @static 
+         */        public static function make($user = null)
+        {
+                        return \Silber\Bouncer\Bouncer::make($user);
+        }
+                    /**
+         * Start a chain, to allow the given authority an ability.
+         *
+         * @param \Illuminate\Database\Eloquent\Model|string $authority
+         * @return \Silber\Bouncer\Conductors\GivesAbilities 
+         * @static 
+         */        public static function allow($authority)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->allow($authority);
+        }
+                    /**
+         * Start a chain, to allow everyone an ability.
+         *
+         * @return \Silber\Bouncer\Conductors\GivesAbilities 
+         * @static 
+         */        public static function allowEveryone()
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->allowEveryone();
+        }
+                    /**
+         * Start a chain, to disallow the given authority an ability.
+         *
+         * @param \Illuminate\Database\Eloquent\Model|string $authority
+         * @return \Silber\Bouncer\Conductors\RemovesAbilities 
+         * @static 
+         */        public static function disallow($authority)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->disallow($authority);
+        }
+                    /**
+         * Start a chain, to disallow everyone the an ability.
+         *
+         * @return \Silber\Bouncer\Conductors\RemovesAbilities 
+         * @static 
+         */        public static function disallowEveryone()
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->disallowEveryone();
+        }
+                    /**
+         * Start a chain, to forbid the given authority an ability.
+         *
+         * @param \Illuminate\Database\Eloquent\Model|string $authority
+         * @return \Silber\Bouncer\Conductors\GivesAbilities 
+         * @static 
+         */        public static function forbid($authority)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->forbid($authority);
+        }
+                    /**
+         * Start a chain, to forbid everyone an ability.
+         *
+         * @return \Silber\Bouncer\Conductors\GivesAbilities 
+         * @static 
+         */        public static function forbidEveryone()
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->forbidEveryone();
+        }
+                    /**
+         * Start a chain, to unforbid the given authority an ability.
+         *
+         * @param \Illuminate\Database\Eloquent\Model|string $authority
+         * @return \Silber\Bouncer\Conductors\RemovesAbilities 
+         * @static 
+         */        public static function unforbid($authority)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->unforbid($authority);
+        }
+                    /**
+         * Start a chain, to unforbid an ability from everyone.
+         *
+         * @return \Silber\Bouncer\Conductors\RemovesAbilities 
+         * @static 
+         */        public static function unforbidEveryone()
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->unforbidEveryone();
+        }
+                    /**
+         * Start a chain, to assign the given role to a model.
+         *
+         * @param \Silber\Bouncer\Database\Role|\Illuminate\Support\Collection|string $roles
+         * @return \Silber\Bouncer\Conductors\AssignsRoles 
+         * @static 
+         */        public static function assign($roles)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->assign($roles);
+        }
+                    /**
+         * Start a chain, to retract the given role from a model.
+         *
+         * @param \Illuminate\Support\Collection|\Silber\Bouncer\Database\Role|string $roles
+         * @return \Silber\Bouncer\Conductors\RemovesRoles 
+         * @static 
+         */        public static function retract($roles)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->retract($roles);
+        }
+                    /**
+         * Start a chain, to sync roles/abilities for the given authority.
+         *
+         * @param \Illuminate\Database\Eloquent\Model|string $authority
+         * @return \Silber\Bouncer\Conductors\SyncsRolesAndAbilities 
+         * @static 
+         */        public static function sync($authority)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->sync($authority);
+        }
+                    /**
+         * Start a chain, to check if the given authority has a certain role.
+         *
+         * @return \Silber\Bouncer\Conductors\ChecksRoles 
+         * @static 
+         */        public static function is($authority)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->is($authority);
+        }
+                    /**
+         * Get the clipboard instance.
+         *
+         * @return \Silber\Bouncer\Contracts\Clipboard 
+         * @static 
+         */        public static function getClipboard()
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->getClipboard();
+        }
+                    /**
+         * Set the clipboard instance used by bouncer.
+         * 
+         * Will also register the given clipboard with the container.
+         *
+         * @param \Silber\Bouncer\Contracts\Clipboard
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function setClipboard($clipboard)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->setClipboard($clipboard);
+        }
+                    /**
+         * Register the guard's clipboard at the container.
+         *
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function registerClipboardAtContainer()
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->registerClipboardAtContainer();
+        }
+                    /**
+         * Use a cached clipboard with the given cache instance.
+         *
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function cache($cache = null)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->cache($cache);
+        }
+                    /**
+         * Fully disable all query caching.
+         *
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function dontCache()
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->dontCache();
+        }
+                    /**
+         * Clear the cache.
+         *
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function refresh($authority = null)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->refresh($authority);
+        }
+                    /**
+         * Clear the cache for the given authority.
+         *
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function refreshFor($authority)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->refreshFor($authority);
+        }
+                    /**
+         * Set the access gate instance.
+         *
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function setGate($gate)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->setGate($gate);
+        }
+                    /**
+         * Get the gate instance.
+         *
+         * @return \Illuminate\Contracts\Auth\Access\Gate|null 
+         * @static 
+         */        public static function getGate()
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->getGate();
+        }
+                    /**
+         * Get the gate instance. Throw if not set.
+         *
+         * @return \Illuminate\Contracts\Auth\Access\Gate 
+         * @throws \RuntimeException
+         * @static 
+         */        public static function gate()
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->gate();
+        }
+                    /**
+         * Determine whether the clipboard used is a cached clipboard.
+         *
+         * @return bool 
+         * @static 
+         */        public static function usesCachedClipboard()
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->usesCachedClipboard();
+        }
+                    /**
+         * Define a new ability using a callback.
+         *
+         * @param string $ability
+         * @param callable|string $callback
+         * @return \Silber\Bouncer\Bouncer 
+         * @throws \InvalidArgumentException
+         * @static 
+         */        public static function define($ability, $callback)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->define($ability, $callback);
+        }
+                    /**
+         * Determine if the given ability should be granted for the current user.
+         *
+         * @param string $ability
+         * @param array|mixed $arguments
+         * @return \Illuminate\Auth\Access\Response 
+         * @throws \Illuminate\Auth\Access\AuthorizationException
+         * @static 
+         */        public static function authorize($ability, $arguments = [])
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->authorize($ability, $arguments);
+        }
+                    /**
+         * Determine if the given ability is allowed.
+         *
+         * @param string $ability
+         * @param array|mixed $arguments
+         * @return bool 
+         * @static 
+         */        public static function can($ability, $arguments = [])
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->can($ability, $arguments);
+        }
+                    /**
+         * Determine if any of the given abilities are allowed.
+         *
+         * @param array $abilities
+         * @param array|mixed $arguments
+         * @return bool 
+         * @static 
+         */        public static function canAny($abilities, $arguments = [])
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->canAny($abilities, $arguments);
+        }
+                    /**
+         * Determine if the given ability is denied.
+         *
+         * @param string $ability
+         * @param array|mixed $arguments
+         * @return bool 
+         * @static 
+         */        public static function cannot($ability, $arguments = [])
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->cannot($ability, $arguments);
+        }
+                    /**
+         * Determine if the given ability is allowed.
+         * 
+         * Alias for the "can" method.
+         *
+         * @deprecated 
+         * @param string $ability
+         * @param array|mixed $arguments
+         * @return bool 
+         * @static 
+         */        public static function allows($ability, $arguments = [])
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->allows($ability, $arguments);
+        }
+                    /**
+         * Determine if the given ability is denied.
+         * 
+         * Alias for the "cannot" method.
+         *
+         * @deprecated 
+         * @param string $ability
+         * @param array|mixed $arguments
+         * @return bool 
+         * @static 
+         */        public static function denies($ability, $arguments = [])
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->denies($ability, $arguments);
+        }
+                    /**
+         * Get an instance of the role model.
+         *
+         * @return \Silber\Bouncer\Database\Role 
+         * @static 
+         */        public static function role($attributes = [])
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->role($attributes);
+        }
+                    /**
+         * Get an instance of the ability model.
+         *
+         * @return \Silber\Bouncer\Database\Ability 
+         * @static 
+         */        public static function ability($attributes = [])
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->ability($attributes);
+        }
+                    /**
+         * Set Bouncer to run its checks before the policies.
+         *
+         * @param bool $boolean
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function runBeforePolicies($boolean = true)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->runBeforePolicies($boolean);
+        }
+                    /**
+         * Register an attribute/callback to determine if a model is owned by a given authority.
+         *
+         * @param string|\Closure $model
+         * @param string|\Closure|null $attribute
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function ownedVia($model, $attribute = null)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->ownedVia($model, $attribute);
+        }
+                    /**
+         * Set the model to be used for abilities.
+         *
+         * @param string $model
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function useAbilityModel($model)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->useAbilityModel($model);
+        }
+                    /**
+         * Set the model to be used for roles.
+         *
+         * @param string $model
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function useRoleModel($model)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->useRoleModel($model);
+        }
+                    /**
+         * Set the model to be used for users.
+         *
+         * @param string $model
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function useUserModel($model)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->useUserModel($model);
+        }
+                    /**
+         * Set custom table names.
+         *
+         * @return \Silber\Bouncer\Bouncer 
+         * @static 
+         */        public static function tables($map)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->tables($map);
+        }
+                    /**
+         * Get the model scoping instance.
+         *
+         * @return mixed 
+         * @static 
+         */        public static function scope($scope = null)
+        {
+                        /** @var \Silber\Bouncer\Bouncer $instance */
+                        return $instance->scope($scope);
+        }
+            }
+    }
+
 namespace Illuminate\Http {
             /**
      * 
@@ -18314,6 +18997,7 @@ namespace  {
             class Broadcast extends \Illuminate\Support\Facades\Broadcast {}
             class Bus extends \Illuminate\Support\Facades\Bus {}
             class Cache extends \Illuminate\Support\Facades\Cache {}
+            class Concurrency extends \Illuminate\Support\Facades\Concurrency {}
             class Config extends \Illuminate\Support\Facades\Config {}
             class Context extends \Illuminate\Support\Facades\Context {}
             class Cookie extends \Illuminate\Support\Facades\Cookie {}
@@ -18911,7 +19595,7 @@ namespace  {
                             /**
              * Set the relationships that should be eager loaded while removing any previously added eager loading specifications.
              *
-             * @param mixed $relations
+             * @param \Illuminate\Database\Eloquent\array<array-key, array|(\Closure(\Illuminate\Database\Eloquent\Relations\Relation<*,*,*>):  mixed)|string>|string  $relations
              * @return \Illuminate\Database\Eloquent\Builder|static 
              * @static 
              */            public static function withOnly($relations)
@@ -19655,7 +20339,7 @@ namespace  {
                                 return $instance->whereBelongsTo($related, $relationshipName, $boolean);
             }
                             /**
-             * Add an "BelongsTo" relationship with an "or where" clause to the query.
+             * Add a "BelongsTo" relationship with an "or where" clause to the query.
              *
              * @param \Illuminate\Database\Eloquent\Model $related
              * @param string|null $relationshipName
@@ -21980,6 +22664,7 @@ namespace  {
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
+            class Bouncer extends \Silber\Bouncer\BouncerFacade {}
     }
 
 

@@ -14,31 +14,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property bool $is_accessible_salarie
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property bool $is_deleted
  *
+ * @property-read Collection<int, \App\Models\Absence> $Absence
+ * @property-read int|null $absence_count
+ *
+ * @method static \Database\Factories\MotifFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Motif newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Motif newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Motif query()
  * @method static \Illuminate\Database\Eloquent\Builder|Motif whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Motif whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Motif whereIsAccessibleSalarie($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Motif whereIsDeleted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Motif whereLibelle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Motif whereUpdatedAt($value)
- *
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Motif> $Absences
- * @property-read int|null $absences_count
- *
- * @method static \Database\Factories\MotifFactory factory($count = null, $state = [])
- *
- * @property-read \App\Models\Absence|null $Absence
- * @property-read int|null $absence_count
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Motif onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Motif withTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Motif withoutTrashed()
- *
- * @property bool $is_deleted
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Motif whereIsDeleted($value)
  *
  * @mixin \Eloquent
  */
