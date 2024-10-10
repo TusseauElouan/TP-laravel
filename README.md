@@ -158,9 +158,6 @@ npm run build
 
 Un compte administrateur est déjà configuré au moment de la migration :
 
-- **Email** : admin@gmail.com
-- **Mot de passe** : password
+- **Email** : `admin@gmail.com`
+- **Mot de passe** : `password`
 
----
-
-Ce README offre un aperçu complet de l'installation et la configuration de votre projet Laravel avec Homestead. N'hésitez pas à l'adapter ou à y ajouter des sections supplémentaires si nécessaire.
