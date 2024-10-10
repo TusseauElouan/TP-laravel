@@ -6,24 +6,6 @@
     "Absences List" : "Liste des absences",
     "Absence" : "Absence",
     "Absences" : "Absences",
-    "absence": {
-        "created_subject": "Nouvelle absence créée",
-        "created_content": "Une nouvelle absence a été créée.",
-        "created_content_admin": "Une nouvelle absence a été créée par :prenom :nom.",
-
-        "updated_subject": "Absence mise à jour",
-        "updated_content": "L'absence a été mise à jour.",
-        "updated_content_admin": "Une absence a été modifiée par :prenom :nom.",
-
-        "deleted_subject": "Absence supprimée",
-        "deleted_content": "L'absence a été supprimée.",
-
-        "validated_subject": "Absence validée",
-        "validated_content": "L'absence a été validée.",
-
-        "restored_subject": "Absence restaurée",
-        "restored_content": "L'absence a été restaurée."
-    },
     "Accessibility" : "Accessibilité",
     "Accessible to employee" : "Accessible aux salariés",
     "Actions" : "Actions",

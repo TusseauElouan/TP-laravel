@@ -3,7 +3,7 @@
 @section('title', __('Absences List'))
 
 @section('content')
-{{$count = 0}}
+<p class="hidden">{{$count = 0}}</p>
 @if(session('success') || session('error'))
 <div id="alert-message" class="flex justify-between items-center w-full max-w-lg mx-auto mt-6 p-4 mb-6 text-sm text-white rounded-lg shadow-lg @if(session('success')) bg-green-500 @else bg-red-500 @endif">
     <span>
@@ -36,7 +36,7 @@
         <tbody>
             @foreach($absences as $absence)
                 @if ($absence->user_id_salarie == Auth::user()->id || Auth::user()->isAn('admin'))
-                    {{$count++}}
+                    <p class="hidden">{{$count++}}</p>
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                         <td class="px-6 py-4">{{ $absence->motif->libelle ?? __('No reason assigned') }}</td>
                         <td class="px-6 py-4">{{ \Carbon\Carbon::parse($absence->date_absence_debut)->format('d-m-Y') }}</td>
