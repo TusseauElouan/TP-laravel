@@ -82,7 +82,7 @@ C:\Windows\System32\drivers\etc\hosts
 
 Dans le dossier Homestead, créez les dossiers suivants si ce n’est pas déjà fait :
 - **code** : contiendra le code de votre projet.
-- **.ssh** : contiendra vos clés SSH (id_rsa et id_rsa.pub).
+- **.ssh** : contiendra vos clés SSH (id_rsa et id_rsa.pub), qu'il faut créer à la main, si elle ne le sont pas déjà.
 
 ## Lancer Homestead
 
