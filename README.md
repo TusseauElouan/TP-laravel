@@ -1,7 +1,3 @@
-Voici une version stylisée pour ton README :
-
----
-
 # TP Laravel - Installation et Configuration
 
 Bienvenue dans le guide d'installation et de configuration pour le projet **tp-laravel**. Ce guide vous aidera à configurer votre environnement de développement avec **Homestead** et à lancer l'application rapidement.
