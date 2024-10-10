@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Liste des absences')
+@section('title', __('Absences List'))
 
 @section('content')
 @if(session('success') || session('error'))
@@ -14,12 +14,12 @@
 </div>
 @endif
 
-<h1 class="font-bold text-center text-5xl m-4">Liste des absences</h1>
+<h1 class="font-bold text-center text-5xl m-4">{{__('Absences List')}}</h1>
 
 <!-- Afficher le bouton "Ajouter une absence" seulement si l'utilisateur est connecté -->
 @auth
 <div class="flex justify-end">
-    <a href="{{route('absence.create')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 mr-[12.5%] mb-5">Ajouter une absence</a>
+    <a href="{{route('absence.create')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 mr-[12.5%] mb-5">{{__('Add an absence')}}</a>
 </div>
 
 
@@ -27,41 +27,41 @@
     <table class="w-9/12 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 shadow-xl">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" class="px-6 py-3">Motif</th>
-                <th scope="col" class="px-6 py-3">Date début</th>
-                <th scope="col" class="px-6 py-3">Date fin</th>
-                <th scope="col" class="px-6 py-3">Salarié</th>
-                <th scope="col" class="px-6 py-3">Actions</th>
-                <th scope="col" class="px-6 py-3">Status</th>
+                <th scope="col" class="px-6 py-3">{{__('Reason')}}</th>
+                <th scope="col" class="px-6 py-3">{{__('Start date')}}</th>
+                <th scope="col" class="px-6 py-3">{{__('End date')}}</th>
+                <th scope="col" class="px-6 py-3">{{__('Employee')}}</th>
+                <th scope="col" class="px-6 py-3">{{__('Actions')}}</th>
+                <th scope="col" class="px-6 py-3">{{__('Status')}}</th>
             </tr>
         </thead>
         <tbody>
             @forelse($absences as $absence)
-                @if ($absence->user_id_salarie == Auth::user()->id || Auth::user()->isA('admin'))
+                @if ($absence->user_id_salarie == Auth::user()->id || Auth::user()->isAn('admin'))
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                         <td class="px-6 py-4">{{ $absence->motif->libelle ?? 'Aucun motif assigné' }}</td>
                         <td class="px-6 py-4">{{ \Carbon\Carbon::parse($absence->date_absence_debut)->format('d-m-Y') }}</td>
                         <td class="px-6 py-4">{{ \Carbon\Carbon::parse($absence->date_absence_fin)->format('d-m-Y') }}</td>
-                        <td class="px-6 py-4">{{ $absence->user->nom ?? 'Utilisateur non trouvé' }} {{ $absence->user->prenom ?? 'Utilisateur non trouvé'}}</td>
+                        <td class="px-6 py-4">{{ $absence->user->nom ?? __('Last name of the user not found') }} {{ $absence->user->prenom ?? __('First name of the user not found')}}</td>
                         <td class="px-6 py-4">
                             @auth
                             @if(!$absence->is_deleted)
                                 @if (!$absence->isValidated)
-                                    <a href="{{route('absence.edit', ['absence' => $absence])}}" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">Modifier</a>
+                                    <a href="{{route('absence.edit', ['absence' => $absence])}}" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">{{__('Edit')}}</a>
                                 @endif
                                 @if(Auth::user()->isA('admin'))
                                     @if (!$absence->is_deleted)
                                     <form action="{{ route('absence.destroy', $absence) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <input type="submit" value="Supprimer" class="ml-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">
+                                        <input type="submit" value="{{__('Delete')}}" class="ml-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">
                                     </form>
                                     @endif
                                     @if (!$absence->isValidated)
                                     <form action="{{ route('absence.validate', ['absence' => $absence]) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="ml-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">
-                                            Valider
+                                            {{__('Validate') }}
                                         </button>
                                     </form>
                                     @endif
@@ -70,7 +70,7 @@
                                 @if(Auth::user()->isA('admin'))
                                     <form action="{{ route('absence.restore', $absence) }}" method="POST" class="inline">
                                         @csrf
-                                        <input type="submit" value="Restorer" class="ml-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">
+                                        <input type="submit" value="{{__('Restore')}}" class="ml-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">
                                     </form>
                                 @endif
                             @endif
@@ -78,9 +78,9 @@
                         </td>
                         <td>
                             @if($absence->isValidated)
-                                <p class="text-green-600">Validée</p>
+                                <p class="text-green-600">{{__('Validated')}}</p>
                             @else
-                                <p class="text-blue-600">En attente</p>
+                                <p class="text-blue-600">{{__('On hold')}}</p>
                             @endif
                         </td>
                     </tr>

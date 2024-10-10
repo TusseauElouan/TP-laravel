@@ -15,6 +15,7 @@ class AbsenceValidateMail extends Mailable
     use Queueable, SerializesModels;
 
     public $absence;
+
     /**
      * Create a new message instance.
      */
@@ -57,7 +58,7 @@ class AbsenceValidateMail extends Mailable
     {
         if (Auth::user()->isA('admin')) {
             return $this->markdown('emails.absence_validate')
-                ->subject('Validation de l\'absence de ' . $this->absence->user->nom)
+                ->subject('Validation de l\'absence de '.$this->absence->user->nom)
                 ->with('absence', $this->absence); // Passe les données de l'absence à la vue
         }
     }

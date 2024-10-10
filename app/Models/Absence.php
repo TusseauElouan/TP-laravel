@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $user_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Motif|null $Motifs
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $Users
  * @property-read int|null $users_count
@@ -30,7 +29,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $user_id_salarie
  * @property string $date_absence_debut
  * @property string $date_absence_fin
- *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Motif> $Motif
  * @property-read int|null $motif_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $User
@@ -43,7 +41,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property-read Motif|null $motif
  * @property-read \App\Models\User|null $user
- *
  * @property bool $isValidated
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereIsValidated($value)
@@ -68,6 +65,7 @@ class Absence extends Model
     {
         return $this->belongsTo(Motif::class);
     }
+
     /**
      * Summary of user
      *

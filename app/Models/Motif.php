@@ -46,6 +46,7 @@ class Motif extends Model
 {
     /** @use HasFactory<MotifFactory> */
     use HasFactory;
+
     /**
      * Summary of getToutMotif
      *
@@ -67,6 +68,7 @@ class Motif extends Model
             return Motif::all();
         });
     }
+
     /**
      * Summary of Absence
      *

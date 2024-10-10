@@ -2,27 +2,27 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Motif;
 use App\Models\Absence;
+use App\Models\Motif;
+use App\Models\User;
 use Illuminate\Support\Carbon;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AbsenceControllerTest extends TestCase
 {
     /**
      * A basic feature test example.
      */
-
-    public function create_user_admin(){
+    public function create_user_admin()
+    {
         $user = User::factory()->create();
         $user->assign('admin');
+
         return $user;
     }
 
-    public function getDate(){
+    public function getDate()
+    {
         $startDate = Carbon::now()->addDays(rand(0, 60));
         $absenceDuration = rand(1, 14);
         $endDate = $startDate->copy()->addDays($absenceDuration);
@@ -30,12 +30,13 @@ class AbsenceControllerTest extends TestCase
         return [$startDate, $endDate];
     }
 
-    public function getAbsence( bool $isValidated, bool $is_deleted){
+    public function getAbsence(bool $isValidated, bool $is_deleted)
+    {
         $motif = Motif::factory()->create();
         $anotherUser = User::factory()->create();
         $date = $this->getDate();
 
-        $absence = new Absence();
+        $absence = new Absence;
         $absence->motif_id = $motif->id;
         $absence->user_id_salarie = $anotherUser->id;
         $absence->date_absence_debut = $date[0];
@@ -53,6 +54,7 @@ class AbsenceControllerTest extends TestCase
 
         $response->assertRedirect(route('login'));
     }
+
     public function test_absence_log_in_Test(): void
     {
         $user = $this->create_user_admin();
@@ -79,7 +81,8 @@ class AbsenceControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_can_store_absence(){
+    public function test_can_store_absence()
+    {
         $user = $this->create_user_admin();
 
         $motif = Motif::factory()->create();
@@ -87,68 +90,73 @@ class AbsenceControllerTest extends TestCase
         $date = $this->getDate();
 
         $response = $this
-        ->actingAs($user)
-        ->post(route('absence.store'), [
-            'user_id_salarie' => $anotherUser->id,
-            'motif_id'=> $motif->id,
-            'date_absence_debut' => $date[0],
-            'date_absence_fin' => $date[1],
-            'is_deleted' => false
-        ]);
+            ->actingAs($user)
+            ->post(route('absence.store'), [
+                'user_id_salarie' => $anotherUser->id,
+                'motif_id' => $motif->id,
+                'date_absence_debut' => $date[0],
+                'date_absence_fin' => $date[1],
+                'is_deleted' => false,
+            ]);
         $response->assertRedirect(route('absence.index'));
         $response->assertSessionHasNoErrors();
     }
 
-    public function test_edit_log_out_Test(){
+    public function test_edit_log_out_Test()
+    {
         $absence = Absence::factory()->create();
         $response = $this->get(route('absence.edit', $absence->id));
 
         $response->assertRedirect(route('login'));
     }
 
-    public function test_edit_log_in_Test(){
+    public function test_edit_log_in_Test()
+    {
         $absence = Absence::factory()->create();
         $user = $this->create_user_admin();
         $motif = Motif::factory()->create();
 
         $response = $this
-        ->actingAs($user)
-        ->get(route('absence.edit', $absence->id));
+            ->actingAs($user)
+            ->get(route('absence.edit', $absence->id));
 
         $response->assertStatus(200);
     }
 
-    public function test_edit_log_in_isValidated(){
+    public function test_edit_log_in_isValidated()
+    {
         $absence = $this->getAbsence(true, false);
 
         $user = $this->create_user_admin();
         $response = $this
-        ->actingAs($user)
-        ->get(route('absence.edit', $absence->id));
+            ->actingAs($user)
+            ->get(route('absence.edit', $absence->id));
 
         $response->assertStatus(302);
     }
 
-    public function test_update_absence(){
+    public function test_update_absence()
+    {
         $user = $this->create_user_admin();
         $motif = Motif::factory()->create();
         $anotherUser = User::factory()->create();
         $absence = $this->getAbsence(false, false);
         $response = $this
-        ->actingAs($user)
-        ->put(route('absence.update', $absence->id), [
-            'motif_id'=> $motif->id,
-            'user_id_salarie' => $anotherUser->id,
-            'date_absence_debut' => '2024-10-09',
-            'date_absence_fin' => '2024-10-10',
-            'is_deleted' => false,
-            'isValidated' => false ]);
+            ->actingAs($user)
+            ->put(route('absence.update', $absence->id), [
+                'motif_id' => $motif->id,
+                'user_id_salarie' => $anotherUser->id,
+                'date_absence_debut' => '2024-10-09',
+                'date_absence_fin' => '2024-10-10',
+                'is_deleted' => false,
+                'isValidated' => false]);
 
         $response->assertRedirect(route('absence.index'));
         $response->assertSessionHasNoErrors();
     }
 
-    public function test_update_absence_isValidated(){
+    public function test_update_absence_isValidated()
+    {
         $user = $this->create_user_admin();
         $motif = Motif::factory()->create();
         $anotherUser = User::factory()->create();
@@ -156,21 +164,22 @@ class AbsenceControllerTest extends TestCase
         $absence = $this->getAbsence(true, false);
 
         $response = $this
-        ->actingAs($user)
-        ->put(route('absence.update', $absence->id), [
-            'motif_id'=> $motif->id,
-            'user_id_salarie' => $anotherUser->id,
-            'date_absence_debut' => '2024-10-09',
-            'date_absence_fin' => '2024-10-10',
-            'is_deleted' => false,
-            'isValidated' => true ]);
+            ->actingAs($user)
+            ->put(route('absence.update', $absence->id), [
+                'motif_id' => $motif->id,
+                'user_id_salarie' => $anotherUser->id,
+                'date_absence_debut' => '2024-10-09',
+                'date_absence_fin' => '2024-10-10',
+                'is_deleted' => false,
+                'isValidated' => true]);
 
         $response->assertRedirect(route('absence.index'));
         $response->assertSessionHas('error', 'Cette absence est déjà validée.');
         $response->assertSessionHasNoErrors();
     }
 
-    public function test_show(){
+    public function test_show()
+    {
         $user = $this->create_user_admin();
         $absence = Absence::factory()->create();
         $response = $this->actingAs($user)->get(route('absence.show', $absence->id));
@@ -178,7 +187,8 @@ class AbsenceControllerTest extends TestCase
         $response->assertRedirect(route('absence.index'));
     }
 
-    public function test_delete(){
+    public function test_delete()
+    {
         $user = $this->create_user_admin();
         $absence = Absence::factory()->create();
         $response = $this->actingAs($user)->delete(route('absence.destroy', $absence->id));
@@ -187,7 +197,8 @@ class AbsenceControllerTest extends TestCase
         $this->assertEquals(1, $absence->is_deleted);
     }
 
-    public function test_validate(){
+    public function test_validate()
+    {
         $user = $this->create_user_admin();
 
         $absence = $this->getAbsence(false, false);
@@ -196,7 +207,8 @@ class AbsenceControllerTest extends TestCase
         $response->assertRedirect(route('absence.index'));
     }
 
-    public function test_restore(){
+    public function test_restore()
+    {
         $user = $this->create_user_admin();
         $absence = $this->getAbsence(false, true);
         $response = $this->actingAs($user)->post(route('absence.restore', $absence->id));
@@ -204,7 +216,8 @@ class AbsenceControllerTest extends TestCase
         $response->assertSessionHas('success', 'Absence restaurée.');
     }
 
-    public function test_validation_page(){
+    public function test_validation_page()
+    {
         $user = $this->create_user_admin();
         $absence = $this->getAbsence(true, false);
         $response = $this->actingAs($user)->get(route('absence.confirmValidation', $absence->id));

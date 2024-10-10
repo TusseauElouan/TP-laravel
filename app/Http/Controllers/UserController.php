@@ -23,6 +23,7 @@ class UserController extends Controller
         }
         $users = User::all();
         $absences = Absence::all();
+
         return view('user.index', compact(['users', 'absences']));
     }
 
@@ -39,18 +40,14 @@ class UserController extends Controller
     /**
      * Summary of store
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return void
      */
-    public function store(Request $request)
-    {
-    }
+    public function store(Request $request) {}
 
     /**
      * Summary of show
      *
-     * @param int $id
      *
      * @return Factory|View
      */
@@ -58,13 +55,13 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $absences = Absence::with('motif')->where('user_id_salarie', $user->id)->get();
+
         return view('user.show', compact('user', 'absences'));
     }
 
     /**
      * Summary of edit
      *
-     * @param \App\Models\User $user
      *
      * @return Factory|View
      */
@@ -76,8 +73,6 @@ class UserController extends Controller
     /**
      * Summary of update
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User $user
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -88,17 +83,15 @@ class UserController extends Controller
         $user->email = $request->email;
 
         $user->save();
+
         return redirect()->route('user.index')->with('success', 'Utilisateur modifié avec succès.');
     }
 
     /**
      * Summary of destroy
      *
-     * @param \App\Models\User $motif
      *
      * @return void
      */
-    public function destroy(User $motif)
-    {
-    }
+    public function destroy(User $motif) {}
 }

@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('absences', function (Blueprint $table)
-        {
-            $table->after('user_id_salarie', function (Blueprint $table)
-            {
+        Schema::table('absences', function (Blueprint $table) {
+            $table->after('user_id_salarie', function (Blueprint $table) {
                 $table->boolean('is_deleted')->defaultValue(false);
             });
         });

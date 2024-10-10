@@ -30,14 +30,14 @@ class AbsenceUpdateRequest extends FormRequest
             'date_absence_debut' => [
                 'required',
                 'date',
-                'after_or_equal:' . Carbon::now()->toDateString(),
-                'before_or_equal:' . Carbon::now()->addDays(60)->toDateString(),
+                'after_or_equal:'.Carbon::now()->toDateString(),
+                'before_or_equal:'.Carbon::now()->addDays(60)->toDateString(),
             ],
             'date_absence_fin' => [
                 'required',
                 'date',
                 'after:date_absence_debut',
-                'before_or_equal:' . Carbon::parse($dateAbsenceDebut)->addDays(15)->toDateString(),
+                'before_or_equal:'.Carbon::parse($dateAbsenceDebut)->addDays(15)->toDateString(),
             ],
         ];
     }

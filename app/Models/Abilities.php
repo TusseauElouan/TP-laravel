@@ -32,6 +32,4 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
-class Abilities extends Model
-{
-}
+class Abilities extends Model {}

@@ -16,6 +16,7 @@
         "larastan/larastan": "^2.0",
         "laravel-lang/lang": "^15.7",
         "laravel/breeze": "^2.2",
+        "laravel/homestead": "^15.0",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",

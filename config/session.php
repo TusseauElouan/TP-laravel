@@ -4,6 +4,9 @@ use Illuminate\Support\Str;
 
 return [
 
+    'secure' => env('SESSION_SECURE_COOKIE', false), // ou true si vous utilisez HTTPS
+    'same_site' => 'lax', // Vous pouvez essayer 'none' si 'lax' ne fonctionne pas
+
     /*
     |--------------------------------------------------------------------------
     | Default Session Driver

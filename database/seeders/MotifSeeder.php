@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Motif;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class MotifSeeder extends Seeder
 {
@@ -14,6 +13,6 @@ class MotifSeeder extends Seeder
     public function run(): void
     {
         Motif::factory(10)
-        ->create();
+            ->create();
     }
 }

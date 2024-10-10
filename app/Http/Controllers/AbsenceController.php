@@ -25,9 +25,11 @@ class AbsenceController extends Controller
      */
     public function GetMotifsCached()
     {
-        $motifs = new Motif();
+        $motifs = new Motif;
+
         return $motifs->getMotifsCache();
     }
+
     /**
      * Summary of index
      *
@@ -38,6 +40,7 @@ class AbsenceController extends Controller
         $motifs = $this->GetMotifsCached();
         $user = User::all();
         $absences = Absence::with(['user', 'motif'])->get();
+
         return view('absence.index', compact('absences'));
     }
 
@@ -57,13 +60,12 @@ class AbsenceController extends Controller
     /**
      * Summary of store
      *
-     * @param AbsenceCreateRequest $validatedData
      *
      * @return RedirectResponse
      */
     public function store(AbsenceCreateRequest $validatedData)
     {
-        $absence = new Absence();
+        $absence = new Absence;
         $absence->user_id_salarie = $validatedData['user_id_salarie'];
         $absence->motif_id = $validatedData['motif_id'];
         $absence->date_absence_debut = $validatedData['date_absence_debut'];
@@ -74,13 +76,13 @@ class AbsenceController extends Controller
 
         // Envoie de l'email après la création
         Mail::to('tusseauelouan@gmail.com')->send(new AbsenceMail($absence));
+
         return redirect()->route('absence.index')->with('success', 'Absence créée avec succès.');
     }
 
     /**
      * Summary of show
      *
-     * @param \App\Models\Absence $absence
      *
      * @return void
      */
@@ -92,7 +94,6 @@ class AbsenceController extends Controller
     /**
      * Summary of edit
      *
-     * @param \App\Models\Absence $absence
      *
      * @return Factory|RedirectResponse|View
      */
@@ -103,14 +104,13 @@ class AbsenceController extends Controller
         }
         $users = User::all();
         $motifs = $this->GetMotifsCached();
-        return view('absence.edit', compact(['absence', 'users','motifs']));
+
+        return view('absence.edit', compact(['absence', 'users', 'motifs']));
     }
 
     /**
      * Summary of update
      *
-     * @param \App\Http\Requests\AbsenceUpdateRequest $request
-     * @param \App\Models\Absence $absence
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -137,7 +137,6 @@ class AbsenceController extends Controller
     /**
      * Summary of destroy
      *
-     * @param \App\Models\Absence $absence
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -145,13 +144,13 @@ class AbsenceController extends Controller
     {
         $absence->is_deleted = true;
         $absence->save();
+
         return redirect()->route('absence.index')->with('success', 'Absence supprimé.');
     }
 
     /**
      * Summary of validate
      *
-     * @param \App\Models\Absence $absence
      *
      * @return RedirectResponse
      */
@@ -168,7 +167,6 @@ class AbsenceController extends Controller
     /**
      * Summary of restore
      *
-     * @param \App\Models\Absence $absence
      *
      * @return RedirectResponse
      */
@@ -183,7 +181,6 @@ class AbsenceController extends Controller
     /**
      * Summary of showValidationPage
      *
-     * @param \App\Models\Absence $absence
      *
      * @return Factory|View
      */

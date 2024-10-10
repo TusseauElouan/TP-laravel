@@ -21,9 +21,11 @@ class MotifController extends Controller
      */
     public function GetMotifsCached()
     {
-        $motifs = new Motif();
+        $motifs = new Motif;
+
         return $motifs->getMotifsCache();
     }
+
     /**
      * Summary of middleware
      *
@@ -35,6 +37,7 @@ class MotifController extends Controller
             new Middleware('admin', except: ['index', 'show']),
         ];
     }
+
     /**
      * Summary of index
      *
@@ -43,8 +46,10 @@ class MotifController extends Controller
     public function index()
     {
         $motifs = $this->GetMotifsCached();
+
         return view('motif.index', compact('motifs'));
     }
+
     /**
      * Summary of create
      *
@@ -54,10 +59,10 @@ class MotifController extends Controller
     {
         return view('motif.create');
     }
+
     /**
      * Summary of store
      *
-     * @param \App\Http\Requests\MotifCreateRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -67,12 +72,13 @@ class MotifController extends Controller
         $validatedData = $request->validated();
 
         // Création du motif
-        $motif = new Motif();
+        $motif = new Motif;
         $motif->libelle = $validatedData['libelle'];
         $motif->is_accessible_salarie = $validatedData['is_accessible_salarie'] ?? false;
         $motif->save();
 
         Cache::forget('motifs');
+
         // Redirection avec message de succès
         return redirect()->route('motif.index')->with('success', 'Motif créé avec succès.');
     }
@@ -80,7 +86,6 @@ class MotifController extends Controller
     /**
      * Summary of show
      *
-     * @param \App\Models\Motif $motif
      *
      * @return mixed
      */
@@ -92,7 +97,6 @@ class MotifController extends Controller
     /**
      * Summary of edit
      *
-     * @param Motif $motif
      *
      * @return Factory|RedirectResponse|View
      */
@@ -104,8 +108,6 @@ class MotifController extends Controller
     /**
      * Summary of update
      *
-     * @param \App\Http\Requests\MotifUpdateRequest $request
-     * @param \App\Models\Motif $motif
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -128,7 +130,6 @@ class MotifController extends Controller
     /**
      * Summary of destroy
      *
-     * @param \App\Models\Motif $motif
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -139,8 +140,10 @@ class MotifController extends Controller
         if ($nb === 0) {
             $motif->delete();
             Cache::forget('motifs');
+
             return redirect()->route('motif.index')->with('success', 'Motif supprimé.');
         }
+
         return redirect()->route('motif.index')->with('error', "Ce motif est utilisé dans {$nb} absence(s).");
     }
 }

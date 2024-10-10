@@ -11,10 +11,6 @@ class VerifyEmailController extends Controller
 {
     /**
      * Summary of __invoke
-     *
-     * @param \Illuminate\Foundation\Auth\EmailVerificationRequest $request
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {

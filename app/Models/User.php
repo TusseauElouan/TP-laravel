@@ -19,7 +19,6 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  *
@@ -38,7 +37,6 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  *
  * @property string $nom
  * @property string $prenom
- *
  * @property-read \App\Models\Absence|null $Absence
  *
  * @method static \Illuminate\Database\Eloquent\Builder|User whereNom($value)
@@ -55,7 +53,6 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereTelephone($value)
  *
  * @property bool $isAdmin
- *
  * @property-read int|null $absence_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAdmin($value)
@@ -119,8 +116,6 @@ class User extends Authenticatable
 
     /**
      * Summary of getAbsenceCountAttribute
-     *
-     * @return int
      */
     public function getAbsenceCountAttribute(): int
     {
@@ -134,7 +129,7 @@ class User extends Authenticatable
      */
     public function getInitialesAttribute()
     {
-        return ucfirst($this->prenom). ucfirst(strtolower($this->nom));
+        return ucfirst($this->prenom).ucfirst(strtolower($this->nom));
     }
 
     /**

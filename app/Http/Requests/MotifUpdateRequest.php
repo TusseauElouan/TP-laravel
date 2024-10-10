@@ -8,8 +8,6 @@ class MotifUpdateRequest extends FormRequest
 {
     /**
      * Summary of authorize
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
