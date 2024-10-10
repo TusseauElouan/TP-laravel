@@ -60,7 +60,7 @@ databases:
   - tp-laravel_test
 ```
 
-> **Note** : Sur Windows, utilisez `.ssh/id_rsa.pub` et `.ssh/id_rsa` comme chemins.
+> **Note** : Sur Windows, utilisez `.ssh/id_rsa.pub`, `.ssh/id_rsa` et `code` comme chemins.
 
 ### Modifier le fichier hosts
 
