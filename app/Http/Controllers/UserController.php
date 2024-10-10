@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Absence;
 use App\Models\User;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use App\Models\Absence;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\Factory;
 
 class UserController extends Controller
 {
@@ -23,6 +24,7 @@ class UserController extends Controller
         }
         $users = User::all();
         $absences = Absence::all();
+
 
         return view('user.index', compact(['users', 'absences']));
     }
@@ -40,27 +42,34 @@ class UserController extends Controller
     /**
      * Summary of store
      *
+     * @param \Illuminate\Http\Request $request
+     *
      * @return void
      */
-    public function store(Request $request)
-    {
-    }
+    public function store(Request $request) {}
 
     /**
      * Summary of show
-     *
-     * @return Factory|View
+     * @param int $id
+     * @return Factory|View|RedirectResponse
      */
     public function show(int $id)
     {
+        if (Auth::check() && !Auth::user()->isAdmin)
+        {
+            return redirect()->route('user.index')->with('error',__('Not accessible to employee'));
+        }
         $user = User::findOrFail($id);
         $absences = Absence::with('motif')->where('user_id_salarie', $user->id)->get();
+
 
         return view('user.show', compact('user', 'absences'));
     }
 
     /**
      * Summary of edit
+     *
+     * @param \App\Models\User $user
      *
      * @return Factory|View
      */
@@ -71,6 +80,9 @@ class UserController extends Controller
 
     /**
      * Summary of update
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User $user
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -90,7 +102,5 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function destroy(User $motif)
-    {
-    }
+    public function destroy(User $motif) {}
 }

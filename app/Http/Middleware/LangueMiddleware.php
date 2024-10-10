@@ -11,16 +11,13 @@ class LangueMiddleware
     /**
      * Handle an incoming request.
      *
+     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        if (session()->has('locale')) {
-            App::setLocale(session()->get('locale'));
-        } else {
-            App::setLocale(config('app.locale'));
-        }
-
+        $locale = $request->cookie('locale', config('app.locale'));
+        App::setLocale($locale);
         return $next($request);
     }
 }

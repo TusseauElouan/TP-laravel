@@ -32,7 +32,6 @@ class AbsenceController extends Controller
     public function GetMotifsCached()
     {
         $motifs = new Motif();
-
         return $motifs->getMotifsCache();
     }
     /**
@@ -86,11 +85,13 @@ class AbsenceController extends Controller
     /**
      * Summary of store
      *
+     * @param AbsenceCreateRequest $validatedData
+     *
      * @return RedirectResponse
      */
     public function store(AbsenceCreateRequest $validatedData)
     {
-        $absence = new Absence();
+        $absence = new Absence;
         $absence->user_id_salarie = $validatedData['user_id_salarie'];
         $absence->motif_id = $validatedData['motif_id'];
         $absence->date_absence_debut = $validatedData['date_absence_debut'];
@@ -99,33 +100,16 @@ class AbsenceController extends Controller
 
         $absence->save();
 
-        $details = $this->initMail($absence);
-        $user = Auth::user();
-
-        Mail::to($user->email)->send(new InfoGeneriqueMail(
-            __('absence.created_subject'),
-            __('absence.created_content'),
-            $details,
-            $absence
-        ));
-
-        $admins = User::where('isAdmin', true)->get();
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(new InfoGeneriqueMail(
-                __('absence.created_subject'),
-                __("absence.created_content_admin", ['prenom' => $user->prenom, 'nom' => $user->nom]),
-                $details,
-                $absence,
-                true
-            ));
-        }
-
+        // Envoie de l'email après la création
+        Mail::to('tusseauelouan@gmail.com')->send(new AbsenceMail($absence));
         return redirect()->route('absence.index')->with('success', 'Absence créée avec succès.');
 
     }
 
     /**
      * Summary of show
+     *
+     * @param \App\Models\Absence $absence
      *
      * @return void
      */
@@ -137,10 +121,15 @@ class AbsenceController extends Controller
     /**
      * Summary of edit
      *
+     * @param \App\Models\Absence $absence
+     *
      * @return Factory|RedirectResponse|View
      */
     public function edit(Absence $absence)
     {
+        if (Auth::check() && !Auth::user()->isAdmin){
+            return redirect()->route('absence.index')->with('error',__('Not accessible to employee'));
+        }
         if ($absence->isValidated) {
             return redirect()->route('absence.index')->with('error', 'Cette absence est déjà validée.');
         }
@@ -152,6 +141,9 @@ class AbsenceController extends Controller
 
     /**
      * Summary of update
+     *
+     * @param \App\Http\Requests\AbsenceUpdateRequest $request
+     * @param \App\Models\Absence $absence
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -207,27 +199,21 @@ class AbsenceController extends Controller
     /**
      * Summary of destroy
      *
+     * @param \App\Models\Absence $absence
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Absence $absence)
     {
         $absence->is_deleted = true;
         $absence->save();
-
-        $details = $this->initMail($absence);
-        $user = Auth::user();
-        $concernedUser = User::find($absence->user_id_salarie);
-        Mail::to([$user->email, $concernedUser->email])->send(new InfoGeneriqueMail(
-            'Absence supprimée',
-            "L'absence a été supprimée.",
-            $details,
-            $absence
-        ));
         return redirect()->route('absence.index')->with('success', 'Absence supprimé.');
     }
 
     /**
      * Summary of validate
+     *
+     * @param \App\Models\Absence $absence
      *
      * @return RedirectResponse
      */
@@ -254,6 +240,8 @@ class AbsenceController extends Controller
     /**
      * Summary of restore
      *
+     * @param \App\Models\Absence $absence
+     *
      * @return RedirectResponse
      */
     public function restore(Absence $absence)
@@ -276,6 +264,8 @@ class AbsenceController extends Controller
 
     /**
      * Summary of showValidationPage
+     *
+     * @param \App\Models\Absence $absence
      *
      * @return Factory|View
      */
