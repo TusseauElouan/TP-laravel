@@ -168,3 +168,11 @@ Lancez la commande suivante dans le terminal de la vm :
 ```bash
 XDEBUG_MODE=coverage artisan test --coverage-html reports/
 ```
+
+## Bug avec les tests
+
+Si vous avez des bugs sur les tests, vous pouvez faire la commande suivante : 
+
+```bash
+art cache:clear
+```
