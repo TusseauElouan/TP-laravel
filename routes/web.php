@@ -31,7 +31,6 @@ Route::middleware(['set.language', 'auth'])->group(function () {
 
     Route::resource('user', UserController::class);
     Route::resource('motif', MotifController::class);
-
 });
 
 require __DIR__.'/auth.php';

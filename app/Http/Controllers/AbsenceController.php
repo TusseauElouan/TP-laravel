@@ -32,6 +32,7 @@ class AbsenceController extends Controller
     public function GetMotifsCached()
     {
         $motifs = new Motif();
+        $motifs = new Motif();
 
         return $motifs->getMotifsCache();
     }
@@ -90,6 +91,7 @@ class AbsenceController extends Controller
      */
     public function store(AbsenceCreateRequest $validatedData)
     {
+        $absence = new Absence();
         $absence = new Absence();
         $absence->user_id_salarie = $validatedData['user_id_salarie'];
         $absence->motif_id = $validatedData['motif_id'];

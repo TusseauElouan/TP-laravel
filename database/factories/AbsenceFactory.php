@@ -19,8 +19,8 @@ class AbsenceFactory extends Factory
      */
     public function definition(): array
     {
-        $startDate = Carbon::now()->addDays(rand(0, 60));
-        $absenceDuration = rand(1, 15);
+        $startDate = Carbon::now()->addDays(rand(0, 59));
+        $absenceDuration = rand(1, 14);
         $endDate = $startDate->copy()->addDays($absenceDuration);
 
         return [

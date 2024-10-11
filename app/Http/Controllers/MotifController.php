@@ -21,7 +21,7 @@ class MotifController extends Controller
      */
     public function GetMotifsCached()
     {
-        $motifs = new Motif;
+        $motifs = new Motif();
 
 
         return $motifs->getMotifsCache();
@@ -63,7 +63,7 @@ class MotifController extends Controller
         $validatedData = $request->validated();
 
         // Création du motif
-        $motif = new Motif;
+        $motif = new Motif();
         $motif->libelle = $validatedData['libelle'];
         $motif->is_accessible_salarie = $validatedData['is_accessible_salarie'] ?? false;
         $motif->save();
