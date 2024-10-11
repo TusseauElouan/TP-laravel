@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Modifier une absence')
+@section('title', __('Edit an absence'))
 
 @section('content')
 
@@ -12,14 +12,14 @@
 
         <!-- Sélection de l'utilisateur -->
         <div class="flex flex-col">
-            <label for="user_id_salarie" class="text-xl mx-1 mb-2">Personne absente</label>
+            <label for="user_id_salarie" class="text-xl mx-1 mb-2">{{__('User')}}</label>
             <select required id="user_id_salarie" name="user_id_salarie" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
                 @if (Auth::check() && Auth::user()->isA('admin'))
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->nom }} {{ $user->prenom }}</option>
-                @endforeach
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}">{{ $user->nom }} {{ $user->prenom }}</option>
+                    @endforeach
                 @else
-                <option value="{{ Auth::user()->id }}">{{ Auth::user()->nom }} {{ Auth::user()->prenom }}</option>
+                    <option value="{{ Auth::user()->id }}">{{ Auth::user()->nom }} {{ Auth::user()->prenom }}</option>
                 @endif
             </select>
             <!-- Message d'erreur pour l'utilisateur -->
@@ -29,24 +29,43 @@
         </div>
 
         <!-- Sélection du motif -->
-        <div class="flex flex-col">
-            <label for="motif_id" class="text-xl mx-1 mb-2">Motif de l'absence</label>
-            <select id="motif_id" name="motif_id" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
-                @foreach($motifs as $motif)
-                    <option value="{{ $motif->id }}" {{ $motif->id == $absence->motif_id ? 'selected' : '' }}>
-                        {{ $motif->libelle }}
-                    </option>
-                @endforeach
-            </select>
-            <!-- Message d'erreur pour le motif -->
-            @error('motif_id')
-                <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
-            @enderror
-        </div>
+        @if (Auth::check() && Auth::user()->isAn('admin'))
+            <div class="flex flex-col">
+                <label for="motif_id" class="text-xl mx-1 mb-2">{{__('Reason')}}</label>
+                <select id="motif_id" name="motif_id" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
+                    @foreach($motifs as $motif)
+                        <option value="{{ $motif->id }}" {{ $motif->id == $absence->motif_id ? 'selected' : '' }}>
+                            {{ $motif->libelle }}
+                        </option>
+                    @endforeach
+                </select>
+                <!-- Message d'erreur pour le motif -->
+                @error('motif_id')
+                    <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+                @enderror
+            </div>
+        @else
+            <div class="flex flex-col">
+                <label for="motif_id" class="text-xl mx-1 mb-2">{{__('Reason')}}</label>
+                <select id="motif_id" name="motif_id" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
+                    @foreach($motifs as $motif)
+                        @if ($motif->is_accessible_salarie)
+                            <option value="{{ $motif->id }}" {{ $motif->id == $absence->motif_id ? 'selected' : '' }}>
+                                {{ $motif->libelle }}
+                            </option>
+                        @endif
+                    @endforeach
+                </select>
+                <!-- Message d'erreur pour le motif -->
+                @error('motif_id')
+                    <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+                @enderror
+            </div>
+        @endif
 
         <!-- Date de début -->
         <div class="flex flex-col">
-            <label for="date_absence_debut" class="text-xl mx-1 mb-2">Date de début</label>
+            <label for="date_absence_debut" class="text-xl mx-1 mb-2">{{__('Start date')}}</label>
             <input type="date" id="date_absence_debut" name="date_absence_debut" class="border-gray-300 border-2 rounded-md p-2" value="{{ \Carbon\Carbon::parse($absence->date_absence_debut)->format('Y-m-d') }}" required>
             <!-- Message d'erreur pour la date de début -->
             @error('date_absence_debut')
@@ -56,7 +75,7 @@
 
         <!-- Date de fin -->
         <div class="flex flex-col">
-            <label for="date_absence_fin" class="text-xl mx-1 mb-2">Date de fin</label>
+            <label for="date_absence_fin" class="text-xl mx-1 mb-2">{{__('End date')}}</label>
             <input type="date" id="date_absence_fin" name="date_absence_fin" class="border-gray-300 border-2 rounded-md p-2" value="{{ \Carbon\Carbon::parse($absence->date_absence_fin)->format('Y-m-d') }}" required>
             <!-- Message d'erreur pour la date de fin -->
             @error('date_absence_fin')
@@ -65,7 +84,7 @@
         </div>
 
         <!-- Bouton de soumission -->
-        <input type="submit" value="Modifier" class="bg-gray-900 rounded-md text-white py-2 cursor-pointer">
+        <input type="submit" value="{{__('Edit')}}" class="bg-gray-900 rounded-md text-white py-2 cursor-pointer">
     </form>
 </div>
 @endsection

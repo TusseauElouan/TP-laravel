@@ -14,7 +14,10 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property int $id
  * @property string $nom
  * @property string $prenom
+ * @property string $nom
+ * @property string $prenom
  * @property string $email
+ * @property bool $isAdmin
  * @property bool $isAdmin
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property mixed $password
@@ -31,6 +34,8 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Silber\Bouncer\Database\Role> $roles
  * @property-read int|null $roles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Silber\Bouncer\Database\Role> $roles
+ * @property-read int|null $roles_count
  *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
@@ -45,7 +50,13 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAll($role)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereIsNot($role)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereIs($role)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAll($role)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereIsNot($role)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePrenom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePrenom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
@@ -92,7 +103,7 @@ class User extends Authenticatable
      *
      * @return HasMany<Absence>
      */
-    public function Absence()
+    public function absence()
     {
         return $this->hasMany(Absence::class);
     }
@@ -100,10 +111,6 @@ class User extends Authenticatable
     /**
      * Summary of getAbsenceCountAttribute
      */
-    public function getAbsenceCountAttribute(): int
-    {
-        return $this->Absence()->count();
-    }
 
     /**
      * Summary of getInitialesAttribute

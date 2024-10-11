@@ -26,21 +26,30 @@
                         @endforeach
                     </table>
                 @endif
+
+                <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 20px;">
+                    <tr>
+                        <td align="center">
+                            <a href="{{ route('absence.confirmValidation', $absence) }}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #f0b429; text-decoration: none; border-radius: 5px; margin: 5px;">
+                                {{ __('Validate') }}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding-top: 10px;">
+                            <a href="{{ route('absence.edit', $absence) }}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px; margin: 5px;">
+                                {{ __('Edit') }}
+                            </a>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
         <tr>
             <td style="padding: 20px; background-color: #1e1e1e; text-align: center;">
-                <p style="color: #888888; font-size: 14px;">Merci de votre attention.</p>
+                <p style="color: #888888; font-size: 14px;">Merci de votre compréhension.</p>
             </td>
         </tr>
     </table>
-    @component('mail::button', ['url' => route('absence.confirmValidation', $absence)])
-        Valider l'absence
-    @endcomponent
-
-    @component('mail::button', ['url' => route('absence.edit', $absence)])
-        Modifier l'absence
-    @endcomponent
-
 </body>
 </html>

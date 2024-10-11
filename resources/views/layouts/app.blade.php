@@ -15,7 +15,7 @@
             @auth
             <a href="{{ route('user.index') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-x border-white">
                 @if(Auth::user()->isA('admin'))
-                    {{__('User List')}}
+                    {{__('Users List')}}
                 @else
                     {{__('Profile')}}
                 @endif
@@ -24,8 +24,7 @@
             <a href="{{ route('motif.index') }}" class="p-3 my-2 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">{{__('Reasons List')}}</a>
             @endauth
             <form action="{{ route('langue.change') }}" method="GET" class="ml-auto mr-4">
-                <select name="locale" onchange="this.form.submit()"
-                    class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                <select name="lang" onchange="this.form.submit()" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                     <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
                     <option value="fr" {{ app()->getLocale() == 'fr' ? 'selected' : '' }}>Français</option>
                 </select>
@@ -42,8 +41,8 @@
                         {{__('Log Out')}}
                     </button>
                 </form>
-                <div class="bg-white rounded-md p-2">
-                    <p class="text-gray-900 font-bold">{{Auth::user()->initiales}}</p>
+                <div class="bg-white rounded-md p-2 mr-3">
+                    <p class="text-gray-900 font-bold" >{{Auth::user()->initiales}}</p>
                 </div>
             @endauth
         </div>

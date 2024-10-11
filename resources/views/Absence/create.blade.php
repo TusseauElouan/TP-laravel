@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Ajouter une absence')
+@section('title', __('Add an absence'))
 
 @section('content')
 <div class="grid place-content-center text-center h-screen">
@@ -8,7 +8,7 @@
 
         <!-- Sélection de l'utilisateur -->
         <div class="flex flex-col">
-            <label for="user_id_salarie" class="text-xl mx-1 mb-2">Personne absente</label>
+            <label for="user_id_salarie" class="text-xl mx-1 mb-2">{{__('User')}}</label>
             <select id="user_id_salarie" name="user_id_salarie" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
                 @if (Auth::check() && Auth::user()->isA('admin'))
                 @foreach($users as $user)
@@ -27,7 +27,7 @@
 
         <!-- Sélection du motif -->
         <div class="flex flex-col">
-            <label for="motif_id" class="text-xl mx-1 mb-2">Motif de l'absence</label>
+            <label for="motif_id" class="text-xl mx-1 mb-2">{{__('Reason')}}</label>
             <select id="motif_id" name="motif_id" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
                 @foreach($motifs as $motif)
                     <option value="{{ $motif->id }}">{{ $motif->libelle }}</option>
@@ -41,7 +41,7 @@
 
         <!-- Date de début -->
         <div class="flex flex-col">
-            <label for="date_absence_debut" class="text-xl mx-1 mb-2">Date de début</label>
+            <label for="date_absence_debut" class="text-xl mx-1 mb-2">{{__('Start date')}}</label>
             <input type="date" id="date_absence_debut" name="date_absence_debut" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
             <!-- Message d'erreur pour la date de début -->
             @error('date_absence_debut')
@@ -51,7 +51,7 @@
 
         <!-- Date de fin -->
         <div class="flex flex-col">
-            <label for="date_absence_fin" class="text-xl mx-1 mb-2">Date de fin</label>
+            <label for="date_absence_fin" class="text-xl mx-1 mb-2">{{__('End date')}}</label>
             <input type="date" id="date_absence_fin" name="date_absence_fin" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
             <!-- Message d'erreur pour la date de fin -->
             @error('date_absence_fin')
@@ -60,7 +60,7 @@
         </div>
 
         <!-- Bouton de soumission -->
-        <input type="submit" value="Ajouter" class="bg-gray-900 rounded-md text-white py-2 cursor-pointer">
+        <input type="submit" value="{{__('Add')}}" class="bg-gray-900 rounded-md text-white py-2 cursor-pointer">
     </form>
 </div>
 @endsection

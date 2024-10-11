@@ -19,20 +19,18 @@ Route::middleware(['set.language', 'auth'])->group(function () {
         return redirect('/');
     })->middleware(['auth'])->name('dashboard');
 
-    Route::middleware(['auth'])->group(function () {
-        Route::resource('absence', AbsenceController::class);
-        Route::post('absence/{absence}/validate', [AbsenceController::class, 'validate'])->name('absence.validate');
-        Route::post('absence/{absence}/restore', [AbsenceController::class, 'restore'])->name('absence.restore');
-        Route::get('/absence/{absence}/confirm', [AbsenceController::class, 'showValidationPage'])->name('absence.confirmValidation');
+    Route::resource('absence', AbsenceController::class);
+    Route::post('absence/{absence}/validate', [AbsenceController::class, 'validate'])->name('absence.validate');
+    Route::post('absence/{absence}/restore', [AbsenceController::class, 'restore'])->name('absence.restore');
+    Route::get('/absence/{absence}/confirm', [AbsenceController::class, 'showValidationPage'])->name('absence.confirmValidation');
 
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        Route::get('langue/change', [LangueController::class, 'change'])->name('langue.change');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('langue/change', [LangueController::class, 'change'])->name('langue.change');
 
-        Route::resource('user', UserController::class);
-        Route::resource('motif', MotifController::class);
-    });
+    Route::resource('user', UserController::class);
+    Route::resource('motif', MotifController::class);
 });
 
 require __DIR__.'/auth.php';

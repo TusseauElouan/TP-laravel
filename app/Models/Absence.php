@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $motif_id
  * @property int $user_id_salarie
  * @property int $is_deleted
+ * @property int $is_deleted
  * @property string $date_absence_debut
  * @property string $date_absence_fin
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -26,8 +27,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Absence newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Absence query()
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Absence newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Absence newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Absence query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Absence whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereDateAbsenceDebut($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereDateAbsenceFin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Absence whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Absence whereIsDeleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Absence whereIsValidated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Absence whereMotifId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Absence whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereIsDeleted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereIsValidated($value)

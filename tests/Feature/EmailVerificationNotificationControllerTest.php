@@ -9,10 +9,11 @@ class EmailVerificationNotificationControllerTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_example(): void
+    public function test_log_out_store(): void
     {
-        $response = $this->get('accueil');
+        $response = $this->post(route('verification.send'));
 
-        $response->assertStatus(200);
+        $response->assertRedirect(route('login'))
+        ->assertSessionHas("error", '');
     }
 }

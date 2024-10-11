@@ -23,19 +23,8 @@ class MotifController extends Controller
     {
         $motifs = new Motif();
 
-        return $motifs->getMotifsCache();
-    }
 
-    /**
-     * Summary of middleware
-     *
-     * @return array<Middleware>
-     */
-    public static function middleware()
-    {
-        return [
-            new Middleware('admin', except: ['index', 'show']),
-        ];
+        return $motifs->getMotifsCache();
     }
 
     /**
@@ -47,8 +36,10 @@ class MotifController extends Controller
     {
         $motifs = $this->GetMotifsCached();
 
+
         return view('motif.index', compact('motifs'));
     }
+
 
     /**
      * Summary of create
@@ -59,6 +50,7 @@ class MotifController extends Controller
     {
         return view('motif.create');
     }
+
 
     /**
      * Summary of store
@@ -78,6 +70,7 @@ class MotifController extends Controller
 
         Cache::forget('motifs');
 
+
         // Redirection avec message de succès
         return redirect()->route('motif.index')->with('success', 'Motif créé avec succès.');
     }
@@ -89,7 +82,8 @@ class MotifController extends Controller
      */
     public function show(Motif $motif)
     {
-        return view('motif.index');
+        $motifs = $this->GetMotifsCached();
+        return redirect()->to(route('motif.index'));
     }
 
     /**
@@ -136,8 +130,10 @@ class MotifController extends Controller
             $motif->delete();
             Cache::forget('motifs');
 
+
             return redirect()->route('motif.index')->with('success', 'Motif supprimé.');
         }
+
 
         return redirect()->route('motif.index')->with('error', "Ce motif est utilisé dans {$nb} absence(s).");
     }

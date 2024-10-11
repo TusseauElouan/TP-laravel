@@ -17,13 +17,15 @@ class AbsenceControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $user->assign('admin');
+        $user->isAdmin = true;
+        $user->save();
 
         return $user;
     }
 
     public function getDate()
     {
-        $startDate = Carbon::now()->addDays(rand(0, 60));
+        $startDate = Carbon::now()->addDays(rand(0, 59));
         $absenceDuration = rand(1, 14);
         $endDate = $startDate->copy()->addDays($absenceDuration);
 
@@ -140,14 +142,15 @@ class AbsenceControllerTest extends TestCase
         $user = $this->create_user_admin();
         $motif = Motif::factory()->create();
         $anotherUser = User::factory()->create();
+        $date = $this->getDate();
         $absence = $this->getAbsence(false, false);
         $response = $this
             ->actingAs($user)
             ->put(route('absence.update', $absence->id), [
                 'motif_id' => $motif->id,
                 'user_id_salarie' => $anotherUser->id,
-                'date_absence_debut' => '2024-10-09',
-                'date_absence_fin' => '2024-10-10',
+                'date_absence_debut' => $date[0],
+                'date_absence_fin' => $date[1],
                 'is_deleted' => false,
                 'isValidated' => false]);
 
@@ -161,6 +164,7 @@ class AbsenceControllerTest extends TestCase
         $motif = Motif::factory()->create();
         $anotherUser = User::factory()->create();
 
+        $date = $this->getDate();
         $absence = $this->getAbsence(true, false);
 
         $response = $this
@@ -168,8 +172,8 @@ class AbsenceControllerTest extends TestCase
             ->put(route('absence.update', $absence->id), [
                 'motif_id' => $motif->id,
                 'user_id_salarie' => $anotherUser->id,
-                'date_absence_debut' => '2024-10-09',
-                'date_absence_fin' => '2024-10-10',
+                'date_absence_debut' => $date[0],
+                'date_absence_fin' => $date[1],
                 'is_deleted' => false,
                 'isValidated' => true]);
 
