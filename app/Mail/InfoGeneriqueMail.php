@@ -15,15 +15,17 @@ class InfoGeneriqueMail extends Mailable
 
     /** @var array<string, mixed> */
     protected array $details;
+
     protected bool $admin;
 
     protected Absence $absence;
+
     /**
      * Create a new message instance.
      *
      * @param  array<string, mixed>  $details
      */
-    public function __construct(string $subject, string $content, array $details, Absence $absence,bool $admin = false)
+    public function __construct(string $subject, string $content, array $details, Absence $absence, bool $admin = false)
     {
         $this->subject = $subject;
         $this->content = $content;
@@ -34,7 +36,6 @@ class InfoGeneriqueMail extends Mailable
 
     /**
      * Summary of build
-     * @return \App\Mail\InfoGeneriqueMail
      */
     public function build(): self
     {
@@ -45,11 +46,9 @@ class InfoGeneriqueMail extends Mailable
                 ->with('details', $this->details)
                 ->with('absence', $this->absence->id);
         }
-        else{
-            return $this->view('emails.mail_generique')
+        return $this->view('emails.mail_generique')
             ->with('subject', $this->subject)
             ->with('content', $this->content)
             ->with('details', $this->details);
-        }
     }
 }

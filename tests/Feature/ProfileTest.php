@@ -54,7 +54,7 @@ class ProfileTest extends TestCase
             ->patch('/profile', [
                 'prenom' => 'Test',
                 'nom' => 'User',
-                'email' => $user->email,
+                // 'email' => $user->email, // Do not include email
             ]);
 
         $response

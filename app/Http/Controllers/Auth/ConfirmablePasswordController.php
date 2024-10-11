@@ -27,7 +27,7 @@ class ConfirmablePasswordController extends Controller
         // Vérifiez si l'utilisateur est authentifié
         $user = Auth::user();
 
-        if (!$user || !Auth::guard('web')->validate([
+        if (! $user || ! Auth::guard('web')->validate([
             'email' => $user->email,
             'password' => $request->password,
         ])) {

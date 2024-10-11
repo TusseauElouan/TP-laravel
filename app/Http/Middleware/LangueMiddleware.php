@@ -10,22 +10,19 @@ class LangueMiddleware
 {
     /**
      * Summary of handle
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
+     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
-{
-    $defaultLocale = config('app.locale');
-    $value = is_string($defaultLocale) ? $defaultLocale : 'default_locale';
+    {
+        $defaultLocale = config('app.locale');
+        $value = is_string($defaultLocale) ? $defaultLocale : 'default_locale';
 
-    $cookieLocale = $request->cookie('locale', $value);
-    $locale = is_string($cookieLocale) ? $cookieLocale : $value;
+        $cookieLocale = $request->cookie('locale', $value);
+        $locale = is_string($cookieLocale) ? $cookieLocale : $value;
 
-    App::setLocale($locale);
+        App::setLocale($locale);
 
-    return $next($request);
-}
-
-
+        return $next($request);
+    }
 }

@@ -25,12 +25,18 @@ class AbsenceControllerTest extends TestCase
 
     public function getDate()
     {
-        $startDate = Carbon::now()->addDays(rand(0, 59));
-        $absenceDuration = rand(1, 14);
+        $startDate = Carbon::now()->addDays(rand(1, 45)); // Début entre 1 et 45 jours dans le futur
+        $absenceDuration = rand(1, 14); // Durée d'absence entre 1 et 14 jours
         $endDate = $startDate->copy()->addDays($absenceDuration);
 
-        return [$startDate, $endDate];
+        // Assurez-vous que date_absence_fin est dans les 15 jours après date_absence_debut
+        if ($absenceDuration > 15) {
+            $absenceDuration = 15; // Limiter la durée à 15 jours
+        }
+
+        return [$startDate, $startDate->copy()->addDays($absenceDuration)];
     }
+
 
     public function getAbsence(bool $isValidated, bool $is_deleted)
     {
@@ -103,6 +109,7 @@ class AbsenceControllerTest extends TestCase
         $response->assertRedirect(route('absence.index'));
         $response->assertSessionHasNoErrors();
     }
+
 
     public function test_edit_log_out_Test()
     {

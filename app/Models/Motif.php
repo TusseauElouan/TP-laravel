@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property bool $is_deleted
  *
- * @property-read Collection<int, \App\Models\Absence> $Absence
+ * @property-read Collection<int, \App\Models\Absence> $absence
  * @property-read int|null $absence_count
  *
  * @method static \Database\Factories\MotifFactory factory($count = null, $state = [])

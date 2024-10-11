@@ -42,7 +42,7 @@ class NewPasswordController extends Controller
             $validatedData->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($validatedData) {
                 $user->forceFill([
-                    'password' => Hash::make($validatedData['password'],),
+                    'password' => Hash::make($validatedData['password']),
                     'remember_token' => Str::random(60),
                 ])->save();
 

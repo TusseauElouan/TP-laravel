@@ -24,28 +24,26 @@ class AbsenceCreateRequest extends FormRequest
     {
         $dateAbsenceDebut = $this->input('date_absence_debut');
 
-    if (!is_string($dateAbsenceDebut) || empty($dateAbsenceDebut)) {
-        $dateAbsenceDebut = Carbon::now()->toDateString(); // Par défaut, utilisez la date actuelle
-    }
+        if (! is_string($dateAbsenceDebut) || empty($dateAbsenceDebut)) {
+            $dateAbsenceDebut = Carbon::now()->toDateString(); // Par défaut, utilisez la date actuelle
+        }
 
-    return [
-        'motif_id' => 'int|required|exists:motifs,id',
-        'user_id_salarie' => 'int|required|exists:users,id',
-        'date_absence_debut' => [
-            'required',
-            'date',
-            'after_or_equal:' . Carbon::now()->toDateString(),
-            'before_or_equal:' . Carbon::now()->addDays(60)->toDateString(),
-            'string'
-        ],
-        'date_absence_fin' => [
-            'required',
-            'date',
-            'after:' . Carbon::parse($dateAbsenceDebut),
-            'before_or_equal:' . Carbon::parse($dateAbsenceDebut)->addDays(15)->toDateString(),
-            'string'
-        ],
-    ];
+        return [
+            'motif_id' => 'required|exists:motifs,id',
+            'user_id_salarie' => 'required|exists:users,id',
+            'date_absence_debut' => [
+                'required',
+                'date',
+                'after_or_equal:'.Carbon::now()->toDateString(),
+                'before_or_equal:'.Carbon::now()->addDays(60)->toDateString(),
+            ],
+            'date_absence_fin' => [
+                'required',
+                'date',
+                'after:'.Carbon::parse($dateAbsenceDebut),
+                'before_or_equal:'.Carbon::parse($dateAbsenceDebut)->addDays(15)->toDateString(),
+            ],
+        ];
     }
 
     /**

@@ -22,7 +22,7 @@ class PasswordController extends Controller
 
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login')->withErrors(['message' => 'Veuillez vous connecter pour changer votre mot de passe.']);
         }
 
@@ -32,5 +32,4 @@ class PasswordController extends Controller
 
         return back()->with('status', 'password-updated');
     }
-
 }

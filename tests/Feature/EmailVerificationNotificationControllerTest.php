@@ -14,6 +14,6 @@ class EmailVerificationNotificationControllerTest extends TestCase
         $response = $this->post(route('verification.send'));
 
         $response->assertRedirect(route('login'))
-        ->assertSessionHas("error", '');
+            ->assertSessionHas('error', '');
     }
 }

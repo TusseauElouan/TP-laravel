@@ -9,17 +9,16 @@ use App\Models\Motif;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Cache;
 
 class MotifController extends Controller
 {
     /**
- * Summary of GetMotifsCached
- *
- * @return \Illuminate\Database\Eloquent\Collection<int, Motif>
- */
-public function GetMotifsCached()
+     * Summary of GetMotifsCached
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, Motif>
+     */
+    public function GetMotifsCached()
     {
         $motifs = new Motif();
 
@@ -35,10 +34,8 @@ public function GetMotifsCached()
     {
         $motifs = $this->GetMotifsCached();
 
-
         return view('motif.index', compact('motifs'));
     }
-
 
     /**
      * Summary of create
@@ -49,7 +46,6 @@ public function GetMotifsCached()
     {
         return view('motif.create');
     }
-
 
     /**
      * Summary of store
@@ -70,7 +66,6 @@ public function GetMotifsCached()
         return redirect()->route('motif.index')->with('success', 'Motif créé avec succès.');
     }
 
-
     /**
      * Summary of show
      *
@@ -79,6 +74,7 @@ public function GetMotifsCached()
     public function show(Motif $motif)
     {
         $motifs = $this->GetMotifsCached();
+
         return redirect()->to(route('motif.index'));
     }
 
@@ -110,7 +106,6 @@ public function GetMotifsCached()
         return redirect()->route('motif.index')->with('success', 'Motif modifié avec succès.');
     }
 
-
     /**
      * Summary of destroy
      *
@@ -124,10 +119,8 @@ public function GetMotifsCached()
             $motif->delete();
             Cache::forget('motifs');
 
-
             return redirect()->route('motif.index')->with('success', 'Motif supprimé.');
         }
-
 
         return redirect()->route('motif.index')->with('error', "Ce motif est utilisé dans {$nb} absence(s).");
     }
