@@ -15,10 +15,17 @@ class LangueMiddleware
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
-    {
-        (array)$locale = $request->cookie('locale', config('app.locale'));
-        App::setLocale($locale);
+{
+    $defaultLocale = config('app.locale');
+    $value = is_string($defaultLocale) ? $defaultLocale : 'default_locale';
 
-        return $next($request);
-    }
+    $cookieLocale = $request->cookie('locale', $value);
+    $locale = is_string($cookieLocale) ? $cookieLocale : $value;
+
+    App::setLocale($locale);
+
+    return $next($request);
+}
+
+
 }

@@ -15,14 +15,13 @@ use Illuminate\Support\Facades\Cache;
 class MotifController extends Controller
 {
     /**
-     * Summary of GetMotifsCached
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function GetMotifsCached()
+ * Summary of GetMotifsCached
+ *
+ * @return \Illuminate\Database\Eloquent\Collection<int, Motif>
+ */
+public function GetMotifsCached()
     {
         $motifs = new Motif();
-
 
         return $motifs->getMotifsCache();
     }
@@ -59,21 +58,18 @@ class MotifController extends Controller
      */
     public function store(MotifCreateRequest $request)
     {
-        // Les données sont déjà validées par MotifRequest
         $validatedData = $request->validated();
 
-        // Création du motif
         $motif = new Motif();
-        $motif->libelle = $validatedData['libelle'];
-        $motif->is_accessible_salarie = $validatedData['is_accessible_salarie'] ?? false;
+        $motif->libelle = is_string($validatedData['libelle']) ? $validatedData['libelle'] : '';
+        $motif->is_accessible_salarie = isset($validatedData['is_accessible_salarie']) ? (bool) $validatedData['is_accessible_salarie'] : false;
         $motif->save();
 
         Cache::forget('motifs');
 
-
-        // Redirection avec message de succès
         return redirect()->route('motif.index')->with('success', 'Motif créé avec succès.');
     }
+
 
     /**
      * Summary of show
@@ -103,19 +99,17 @@ class MotifController extends Controller
      */
     public function update(MotifUpdateRequest $request, Motif $motif)
     {
-        // Les données sont déjà validées par MotifRequest
         $validatedData = $request->validated();
 
-        // Mise à jour du motif
-        $motif->libelle = $validatedData['libelle'];
-        $motif->is_accessible_salarie = $validatedData['is_accessible_salarie'] ?? false;
+        $motif->libelle = is_string($validatedData['libelle']) ? $validatedData['libelle'] : '';
+        $motif->is_accessible_salarie = isset($validatedData['is_accessible_salarie']) ? (bool) $validatedData['is_accessible_salarie'] : false;
         $motif->save();
 
         Cache::forget('motifs');
 
-        // Redirection avec message de succès
         return redirect()->route('motif.index')->with('success', 'Motif modifié avec succès.');
     }
+
 
     /**
      * Summary of destroy

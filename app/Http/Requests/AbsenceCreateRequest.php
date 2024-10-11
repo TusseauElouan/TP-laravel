@@ -29,19 +29,21 @@ class AbsenceCreateRequest extends FormRequest
     }
 
     return [
-        'motif_id' => 'required|exists:motifs,id',
-        'user_id_salarie' => 'required|exists:users,id',
+        'motif_id' => 'int|required|exists:motifs,id',
+        'user_id_salarie' => 'int|required|exists:users,id',
         'date_absence_debut' => [
             'required',
             'date',
             'after_or_equal:' . Carbon::now()->toDateString(),
             'before_or_equal:' . Carbon::now()->addDays(60)->toDateString(),
+            'string'
         ],
         'date_absence_fin' => [
             'required',
             'date',
             'after:' . Carbon::parse($dateAbsenceDebut),
             'before_or_equal:' . Carbon::parse($dateAbsenceDebut)->addDays(15)->toDateString(),
+            'string'
         ],
     ];
     }

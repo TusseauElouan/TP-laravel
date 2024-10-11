@@ -29,8 +29,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Validation des champs d'inscription
-        $request->validate([
+        $validatedData = $request->validate([
             'nom' => ['required', 'string', 'max:255'],  // Last Name (nom)
             'prenom' => ['required', 'string', 'max:255'],  // First Name (prenom)
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
@@ -38,20 +37,17 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = new User();
-        $user->nom = $request->nom;
-        $user->prenom = $request->prenom;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        $user->nom = $validatedData['nom'];
+        $user->prenom = $validatedData['prenom'];
+        $user->email = $validatedData['email'];
+        $user->password = Hash::make($validatedData['password']);
 
         $user->save();
 
-        // Événement de création d'utilisateur
         event(new Registered($user));
 
-        // Connexion automatique de l'utilisateur
         Auth::login($user);
 
-        // Redirection après inscription réussie
         return redirect(route('dashboard'));
     }
 }
