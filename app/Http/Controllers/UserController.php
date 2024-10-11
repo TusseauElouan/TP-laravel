@@ -19,9 +19,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (! Auth::check()) {
-            return redirect()->route('login')->with('error', 'Vous devez vous connecter.');
-        }
         $users = User::all();
         $absences = Absence::all();
 
@@ -36,33 +33,21 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
+        return redirect()->to(route('user.index'));
     }
 
     /**
-     * Summary of store
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return void
-     */
-    public function store(Request $request) {}
-
-    /**
      * Summary of show
-     * @param int $id
-     * @return Factory|View|RedirectResponse
+     * @param \App\Models\Absence $absence
+     * @return Factory|RedirectResponse|View
      */
-    public function show(int $id)
+    public function show(User $user)
     {
         if (Auth::check() && !Auth::user()->isAdmin)
         {
             return redirect()->route('user.index')->with('error',__('Not accessible to employee'));
         }
-        $user = User::findOrFail($id);
         $absences = Absence::with('motif')->where('user_id_salarie', $user->id)->get();
-
-
         return view('user.show', compact('user', 'absences'));
     }
 
@@ -96,11 +81,4 @@ class UserController extends Controller
 
         return redirect()->route('user.index')->with('success', 'Utilisateur modifié avec succès.');
     }
-
-    /**
-     * Summary of destroy
-     *
-     * @return void
-     */
-    public function destroy(User $motif) {}
 }

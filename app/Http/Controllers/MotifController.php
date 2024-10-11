@@ -28,19 +28,6 @@ class MotifController extends Controller
     }
 
     /**
-     * Summary of middleware
-     *
-     * @return array<Middleware>
-     */
-    public static function middleware()
-    {
-        return [
-            new Middleware('admin', except: ['index', 'show']),
-        ];
-    }
-
-
-    /**
      * Summary of index
      *
      * @return Factory|RedirectResponse|View
@@ -95,7 +82,8 @@ class MotifController extends Controller
      */
     public function show(Motif $motif)
     {
-        return view('motif.index');
+        $motifs = $this->GetMotifsCached();
+        return redirect()->to(route('motif.index'));
     }
 
     /**

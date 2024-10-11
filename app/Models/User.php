@@ -118,7 +118,7 @@ class User extends Authenticatable
      *
      * @return HasMany<Absence>
      */
-    public function Absence()
+    public function absence()
     {
         return $this->hasMany(Absence::class);
     }
@@ -126,10 +126,6 @@ class User extends Authenticatable
     /**
      * Summary of getAbsenceCountAttribute
      */
-    public function getAbsenceCountAttribute(): int
-    {
-        return $this->Absence()->count();
-    }
 
     /**
      * Summary of getInitialesAttribute
