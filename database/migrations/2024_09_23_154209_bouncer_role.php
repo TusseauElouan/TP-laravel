@@ -26,8 +26,8 @@ return new class extends Migration
         Bouncer::allow('admin')->to('absence-retrieve');
         Bouncer::allow('admin')->to('absence-delete');
 
-        $user = User::create(['nom' => 'admin', 'prenom' => 'admin', 'email' => 'admin@gmail.com', 'password' => 'password', 'isAdmin' => true]);
-        Bouncer::assign('admin')->to($user);
+        $user = User::create(['nom' => 'admin', 'prenom' => 'admin', 'email' => 'admin@gmail.com', 'password' => 'password', 'isAdmin' => 1]);
+        $user->assign('admin');
     }
 
     /**

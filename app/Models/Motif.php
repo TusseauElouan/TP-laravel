@@ -38,19 +38,9 @@ class Motif extends Model
     use HasFactory;
 
     /**
-     * Summary of getToutMotif
-     *
-     * @return Collection<int, Motif>
-     */
-    public function getMotif()
-    {
-        return Motif::all();
-    }
-
-    /**
      * Summary of getMotifsCache
      *
-     * @return Collection
+     * @return Collection<int, Motif>
      */
     public function getMotifsCache()
     {
@@ -64,7 +54,7 @@ class Motif extends Model
      *
      * @return HasMany<Absence>
      */
-    public function Absence()
+    public function absence()
     {
         return $this->hasMany(Absence::class);
     }

@@ -19,11 +19,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (! Auth::check()) {
-            return redirect()->route('login')->with('error', 'Vous devez vous connecter.');
-        }
         $users = User::all();
         $absences = Absence::all();
+
 
         return view('user.index', compact(['users', 'absences']));
     }
@@ -35,36 +33,27 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
-    }
-
-    /**
-     * Summary of store
-     *
-     * @return void
-     */
-    public function store(Request $request)
-    {
+        return redirect()->to(route('user.index'));
     }
 
     /**
      * Summary of show
-     *
-     * @return Factory|View|RedirectResponse
+     * @param \App\Models\Absence $absence
+     * @return Factory|RedirectResponse|View
      */
-    public function show(int $id)
+    public function show(User $user)
     {
         if (Auth::check() && ! Auth::user()->isAdmin) {
             return redirect()->route('user.index')->with('error', __('Not accessible to employee'));
         }
-        $user = User::findOrFail($id);
         $absences = Absence::with('motif')->where('user_id_salarie', $user->id)->get();
-
         return view('user.show', compact('user', 'absences'));
     }
 
     /**
      * Summary of edit
+     *
+     * @param \App\Models\User $user
      *
      * @return Factory|View
      */
@@ -75,6 +64,9 @@ class UserController extends Controller
 
     /**
      * Summary of update
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User $user
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -87,14 +79,5 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->route('user.index')->with('success', 'Utilisateur modifié avec succès.');
-    }
-
-    /**
-     * Summary of destroy
-     *
-     * @return void
-     */
-    public function destroy(User $motif)
-    {
     }
 }

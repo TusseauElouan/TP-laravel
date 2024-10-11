@@ -41,8 +41,8 @@
                         {{__('Log Out')}}
                     </button>
                 </form>
-                <div class="bg-white rounded-md p-2">
-                    <p class="text-gray-900 font-bold">{{Auth::user()->initiales}}</p>
+                <div class="bg-white rounded-md p-2 mr-3">
+                    <p class="text-gray-900 font-bold" >{{Auth::user()->initiales}}</p>
                 </div>
             @endauth
         </div>

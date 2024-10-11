@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AbsenceCreateRequest;
-use App\Http\Requests\AbsenceUpdateRequest;
-use App\Mail\AbsenceMail;
-use App\Mail\AbsenceModifiedMail;
-use App\Mail\AbsenceModifiedMailAdmin;
-use App\Mail\AbsenceValidateMail;
-use App\Models\Absence;
-use App\Models\Motif;
 use App\Models\User;
-use Illuminate\Contracts\View\Factory;
+use App\Models\Motif;
+use App\Models\Absence;
+use App\Mail\AbsenceMail;
+use App\Mail\InfoGeneriqueMail;
+use App\Mail\AbsenceModifiedMail;
+use App\Mail\AbsenceValidateMail;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\RedirectResponse;
+use App\Mail\AbsenceModifiedMailAdmin;
+use Illuminate\Contracts\View\Factory;
+use App\Http\Requests\AbsenceCreateRequest;
+use App\Http\Requests\AbsenceUpdateRequest;
 
 class AbsenceController extends Controller
 {
@@ -24,11 +25,36 @@ class AbsenceController extends Controller
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
+    protected User $user;
+
+    protected Motif $motif;
+    protected User $concernedUser;
     public function GetMotifsCached()
     {
         $motifs = new Motif();
+        $motifs = new Motif();
 
         return $motifs->getMotifsCache();
+    }
+    /**
+     * Summary of initMail
+     * @param \App\Models\Absence $absence
+     * @return array<string, mixed>
+     */
+    public function initMail(Absence $absence){
+        $user = Auth::user();
+        $motif = Motif::find($absence['motif_id']);
+        $concernedUser = User::find($absence['user_id_salarie']);
+
+        $status = $absence->isValidated ? 'Validée':'En attente';
+
+        return $details = [
+            'Utilisateur' => $concernedUser->prenom.' '.$concernedUser->nom,
+            'Motif' => $motif->libelle,
+            'Date de début' => $absence->date_absence_debut,
+            'Date de fin' => $absence->date_absence_fin,
+            'Statut' => $status,
+        ];
     }
 
     /**
@@ -66,6 +92,7 @@ class AbsenceController extends Controller
     public function store(AbsenceCreateRequest $validatedData)
     {
         $absence = new Absence();
+        $absence = new Absence();
         $absence->user_id_salarie = $validatedData['user_id_salarie'];
         $absence->motif_id = $validatedData['motif_id'];
         $absence->date_absence_debut = $validatedData['date_absence_debut'];
@@ -74,10 +101,29 @@ class AbsenceController extends Controller
 
         $absence->save();
 
-        // Envoie de l'email après la création
-        Mail::to('tusseauelouan@gmail.com')->send(new AbsenceMail($absence));
+        $details = $this->initMail($absence);
+        $user = Auth::user();
+
+        Mail::to($user->email)->send(new InfoGeneriqueMail(
+            'Nouvelle absence créée',
+            'Une nouvelle absence a été créée.',
+            $details,
+            $absence
+        ));
+
+        $admins = User::where('isAdmin', true)->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new InfoGeneriqueMail(
+                'Nouvelle absence créée',
+                "Une nouvelle absence a été créée par {$user->prenom} {$user->nom}.",
+                $details,
+                $absence,
+                true
+            ));
+        }
 
         return redirect()->route('absence.index')->with('success', 'Absence créée avec succès.');
+
     }
 
     /**
@@ -97,9 +143,6 @@ class AbsenceController extends Controller
      */
     public function edit(Absence $absence)
     {
-        if (Auth::check() && ! Auth::user()->isAdmin) {
-            return redirect()->route('absence.index')->with('error', __('Not accessible to employee'));
-        }
         if ($absence->isValidated) {
             return redirect()->route('absence.index')->with('error', 'Cette absence est déjà validée.');
         }
@@ -128,8 +171,37 @@ class AbsenceController extends Controller
 
         $absence->save();
 
-        Mail::to($absence->user->email)->send(new AbsenceModifiedMail($absence));
-        Mail::to($absence->user->email)->send(new AbsenceModifiedMailAdmin($absence));
+        $user = Auth::user();
+        $concernedUser = User::find($validatedData['user_id_salarie']);
+
+        $details = $this->initMail($absence);
+
+        if ($user->isAn('admin') && $user->id !== $absence->user_id_salarie) {
+            Mail::to($concernedUser->email)->send(new InfoGeneriqueMail(
+                'Votre absence a été modifiée',
+                'Votre absence a été mise à jour par un administrateur.',
+                $details,
+                $absence,
+            ));
+        }
+
+        Mail::to($user->email)->send(new InfoGeneriqueMail(
+            'Absence mise à jour',
+            "L'absence a été mise à jour.",
+            $details,
+            $absence
+        ));
+
+        $admins = User::where('isAdmin', true)->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new InfoGeneriqueMail(
+                'Une absence a été modifié',
+                "Une absence a été modifié par {$user->prenom} {$user->nom}.",
+                $details,
+                $absence,
+                true
+            ));
+        }
 
         return redirect()->route('absence.index')->with('success', 'Absence modifiée avec succès.');
     }
@@ -144,6 +216,15 @@ class AbsenceController extends Controller
         $absence->is_deleted = true;
         $absence->save();
 
+        $details = $this->initMail($absence);
+        $user = Auth::user();
+        $concernedUser = User::find($absence->user_id_salarie);
+        Mail::to([$user->email, $concernedUser->email])->send(new InfoGeneriqueMail(
+            'Absence supprimée',
+            "L'absence a été supprimée.",
+            $details,
+            $absence
+        ));
         return redirect()->route('absence.index')->with('success', 'Absence supprimé.');
     }
 
@@ -157,7 +238,17 @@ class AbsenceController extends Controller
         $absence->isValidated = true;
         $absence->save();
 
-        Mail::to($absence->user->email)->send(new AbsenceValidateMail($absence));
+        $user = Auth::user();
+        $concernedUser = User::find($absence->user_id_salarie);
+
+        $details = $this->initMail($absence);
+
+        Mail::to([$user->email, $concernedUser->email])->send(new InfoGeneriqueMail(
+            'Absence validée',
+            "L'absence a été validée.",
+            $details,
+            $absence
+        ));
 
         return redirect()->route('absence.index')->with('success', 'Absence validée avec succès.');
     }
@@ -172,6 +263,16 @@ class AbsenceController extends Controller
         $absence->is_deleted = false;
         $absence->save();
 
+        $user = Auth::user();
+        $concernedUser = User::find($absence->user_id_salarie);
+        $details = $this->initMail($absence);
+
+        Mail::to([$user->email, $concernedUser->email])->send(new InfoGeneriqueMail(
+            'Absence restorée',
+            "L'absence a été restorée.",
+            $details,
+            $absence
+        ));
         return redirect()->route('absence.index')->with('success', 'Absence restaurée.');
     }
 
