@@ -154,10 +154,17 @@ npm run build
 
 > **Note** : Si vous avez des erreurs avec ces lignes de commandes, il faut installer Node.js sur Windows, consultez [ce guide](https://kinsta.com/fr/blog/comment-installer-node-js/) pour plus de détails. Une fois intallé, dans le terminal en administrateur, déplacez-vous au dossier Homestead et executer les deux dernières commandes indiqué au-dessus. 
 
-## Compte Admin
+### Compte Admin
 
 Un compte administrateur est déjà configuré au moment de la migration :
 
 - **Email** : `admin@gmail.com`
 - **Mot de passe** : `password`
 
+### Test Unitaire
+
+Lancez la commande suivante dans le terminal de la vm :
+
+```bash
+XDEBUG_MODE=coverage artisan test --coverage-html reports/
+```
