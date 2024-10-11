@@ -23,7 +23,7 @@ class InfoGeneriqueMail extends Mailable
      *
      * @param  array<string, mixed>  $details
      */
-    public function __construct(string $subject, string $content, array $details = [], Absence $absence,bool $admin = false)
+    public function __construct(string $subject, string $content, array $details, Absence $absence,bool $admin = false)
     {
         $this->subject = $subject;
         $this->content = $content;

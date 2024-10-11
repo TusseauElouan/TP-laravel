@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\App;
 class LangueMiddleware
 {
     /**
-     * Handle an incoming request.
-     *
+     * Summary of handle
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        $locale = $request->cookie('locale', config('app.locale'));
+        (array)$locale = $request->cookie('locale', config('app.locale'));
         App::setLocale($locale);
 
         return $next($request);
