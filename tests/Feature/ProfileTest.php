@@ -52,9 +52,9 @@ class ProfileTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->patch('/profile', [
-                'prenom' => 'Test',
-                'nom' => 'User',
-                // 'email' => $user->email, // Do not include email
+                'prenom' => $user->prenom,
+                'nom' => $user->nom,
+                'email' => $user->email,
             ]);
 
         $response

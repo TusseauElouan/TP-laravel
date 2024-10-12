@@ -46,6 +46,7 @@ class InfoGeneriqueMail extends Mailable
                 ->with('details', $this->details)
                 ->with('absence', $this->absence->id);
         }
+
         return $this->view('emails.mail_generique')
             ->with('subject', $this->subject)
             ->with('content', $this->content)

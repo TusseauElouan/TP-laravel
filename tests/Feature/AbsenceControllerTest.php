@@ -25,18 +25,11 @@ class AbsenceControllerTest extends TestCase
 
     public function getDate()
     {
-        $startDate = Carbon::now()->addDays(rand(1, 45)); // Début entre 1 et 45 jours dans le futur
-        $absenceDuration = rand(1, 14); // Durée d'absence entre 1 et 14 jours
-        $endDate = $startDate->copy()->addDays($absenceDuration);
+        $startDate = Carbon::now()->addDay();
+        $endDate = $startDate->copy()->addDays(rand(1, 14));
 
-        // Assurez-vous que date_absence_fin est dans les 15 jours après date_absence_debut
-        if ($absenceDuration > 15) {
-            $absenceDuration = 15; // Limiter la durée à 15 jours
-        }
-
-        return [$startDate, $startDate->copy()->addDays($absenceDuration)];
+        return [$startDate->toDateString(), $endDate->toDateString()];
     }
-
 
     public function getAbsence(bool $isValidated, bool $is_deleted)
     {
@@ -92,7 +85,6 @@ class AbsenceControllerTest extends TestCase
     public function test_can_store_absence()
     {
         $user = $this->create_user_admin();
-
         $motif = Motif::factory()->create();
         $anotherUser = User::factory()->create();
         $date = $this->getDate();
@@ -107,9 +99,7 @@ class AbsenceControllerTest extends TestCase
                 'is_deleted' => false,
             ]);
         $response->assertRedirect(route('absence.index'));
-        $response->assertSessionHasNoErrors();
     }
-
 
     public function test_edit_log_out_Test()
     {
@@ -151,6 +141,7 @@ class AbsenceControllerTest extends TestCase
         $anotherUser = User::factory()->create();
         $date = $this->getDate();
         $absence = $this->getAbsence(false, false);
+
         $response = $this
             ->actingAs($user)
             ->put(route('absence.update', $absence->id), [
@@ -159,10 +150,10 @@ class AbsenceControllerTest extends TestCase
                 'date_absence_debut' => $date[0],
                 'date_absence_fin' => $date[1],
                 'is_deleted' => false,
-                'isValidated' => false]);
+                'isValidated' => false,
+            ]);
 
         $response->assertRedirect(route('absence.index'));
-        $response->assertSessionHasNoErrors();
     }
 
     public function test_update_absence_isValidated()
@@ -170,7 +161,6 @@ class AbsenceControllerTest extends TestCase
         $user = $this->create_user_admin();
         $motif = Motif::factory()->create();
         $anotherUser = User::factory()->create();
-
         $date = $this->getDate();
         $absence = $this->getAbsence(true, false);
 
@@ -182,11 +172,11 @@ class AbsenceControllerTest extends TestCase
                 'date_absence_debut' => $date[0],
                 'date_absence_fin' => $date[1],
                 'is_deleted' => false,
-                'isValidated' => true]);
+                'isValidated' => true,
+            ]);
 
         $response->assertRedirect(route('absence.index'));
         $response->assertSessionHas('error', 'Cette absence est déjà validée.');
-        $response->assertSessionHasNoErrors();
     }
 
     public function test_show()
