@@ -12,7 +12,7 @@
     </button>
 </div>
 @endif
-@if(Auth::check() && Auth::user()->isA('admin'))
+@if(Auth::check() && Auth::user()->isAn('admin'))
 <h1 class="font-bold text-center text-5xl m-4">{{__('Users List')}}</h1>
 <div class="flex overflow-x-auto justify-center">
     <table class="w-9/12 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 shadow-xl">

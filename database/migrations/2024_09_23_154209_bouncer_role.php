@@ -2,6 +2,8 @@
 
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Hash;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 return new class extends Migration
 {
@@ -10,6 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Bouncer::role()->where('name', 'admin')->exists()) {
+            Bouncer::role()->create([
+                'name' => 'admin',
+                'title' => 'Administrator'
+            ]);
+        }
 
         Bouncer::allow('admin')->to('user-create');
         Bouncer::allow('admin')->to('user-update');
@@ -26,7 +34,14 @@ return new class extends Migration
         Bouncer::allow('admin')->to('absence-retrieve');
         Bouncer::allow('admin')->to('absence-delete');
 
-        $user = User::create(['nom' => 'admin', 'prenom' => 'admin', 'email' => 'admin@gmail.com', 'password' => 'password', 'isAdmin' => 1]);
+        $user = User::create([
+            'nom' => 'admin',
+            'prenom' => 'admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('password'),
+            'isAdmin' => true
+        ]);
+
         $user->assign('admin');
     }
 
@@ -35,18 +50,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Find the admin user and remove the role and permissions
         $user = User::where('email', 'admin@gmail.com')->first();
 
         if ($user) {
-            // Unassign the admin role from the user
             Bouncer::retract('admin')->from($user);
 
-            // Delete the user
             $user->delete();
         }
 
-        // Remove all permissions assigned to the 'admin' role
         Bouncer::disallow('admin')->to('user-create');
         Bouncer::disallow('admin')->to('user-update');
         Bouncer::disallow('admin')->to('user-retrieve');
@@ -62,7 +73,6 @@ return new class extends Migration
         Bouncer::disallow('admin')->to('absence-retrieve');
         Bouncer::disallow('admin')->to('absence-delete');
 
-        // Optionally, you could delete the role if it's not used elsewhere
         Bouncer::role()->where('name', 'admin')->delete();
     }
 };
