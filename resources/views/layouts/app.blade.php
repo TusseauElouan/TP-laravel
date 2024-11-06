@@ -22,6 +22,7 @@
             </a>
             <a href="{{ route('absence.index') }}" class="p-3 my-2 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">{{__('Absences List')}}</a>
             <a href="{{ route('motif.index') }}" class="p-3 my-2 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">{{__('Reasons List')}}</a>
+            <a href="{{ route('calendar.index') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">{{__('Calendar')}}</a>
             @endauth
             <form action="{{ route('langue.change') }}" method="GET" class="ml-auto mr-4">
                 <select name="lang" onchange="this.form.submit()" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
