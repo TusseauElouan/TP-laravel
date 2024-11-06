@@ -21,6 +21,8 @@ Route::middleware(['set.language', 'auth'])->group(function () {
         return redirect('/');
     })->middleware(['auth'])->name('dashboard');
 
+    Route::get('motif/info', [MotifController::class, 'info'])->name('motif.info');
+
     Route::resource('absence', AbsenceController::class);
     Route::post('absence/{absence}/validate', [AbsenceController::class, 'validate'])->name('absence.validate');
     Route::post('absence/{absence}/refuse', [AbsenceController::class, 'refuse'])->name('absence.refuse');

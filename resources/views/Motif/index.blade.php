@@ -16,6 +16,8 @@
 @auth
 <h1 class="font-bold text-center text-5xl m-4">{{__('Reasons List')}}</h1>
 <div class="flex justify-end">
+    <a href="{{route('motif.info')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 mb-5">{{__('know more about reasons')}}</a>
+
     <a href="{{route('motif.create')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 mr-[12.5%] mb-5">{{__('Add a reason')}}</a>
 </div>
 @endif

@@ -124,4 +124,10 @@ class MotifController extends Controller
 
         return redirect()->route('motif.index')->with('error', "Ce motif est utilisé dans {$nb} absence(s).");
     }
+
+    public function info()
+    {
+        $motifs = Motif::all();
+        return view('motif.info', compact('motifs'));
+    }
 }
