@@ -43,6 +43,7 @@ class AbsenceCreateRequest extends FormRequest
                 'after:'.Carbon::parse($dateAbsenceDebut),
                 'before_or_equal:'.Carbon::parse($dateAbsenceDebut)->addDays(15)->toDateString(),
             ],
+            'commentaire' => 'nullable|string|max:255'
         ];
     }
 
@@ -62,6 +63,7 @@ class AbsenceCreateRequest extends FormRequest
             'date_absence_fin.required' => 'Veuillez indiquer une date de fin d\'absence.',
             'date_absence_fin.after' => 'La date de fin doit être après la date de début.',
             'date_absence_fin.before_or_equal' => 'La date de fin ne peut pas être plus de 15 jours après la date de début.',
+            'commentaire.max' => 'Le commentaire ne peut pas dépasser 255 caractères.',
         ];
     }
 }

@@ -51,7 +51,7 @@
                         <td class="px-6 py-4">{{ $absence->user->nom ?? __('Last name of the user not found') }} {{ $absence->user->prenom ?? __('First name of the user not found')}}</td>
                         <td class="px-6 py-4">
                             @if(!$absence->is_deleted)
-                                @if (!$absence->isValidated)
+                                @if (!$absence->isValidated && !$absence->isRefused)
                                     <a href="{{route('absence.edit', ['absence' => $absence])}}" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">{{__('Edit')}}</a>
                                 @endif
                                 @if(Auth::user()->isAn('admin'))
@@ -62,11 +62,17 @@
                                         <input type="submit" value="{{__('Delete')}}" class="ml-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">
                                     </form>
                                     @endif
-                                    @if (!$absence->isValidated)
+                                    @if (!$absence->isValidated && !$absence->isRefused)
                                     <form action="{{ route('absence.validate', ['absence' => $absence]) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="ml-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">
                                             {{__('Validate') }}
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('absence.refuse', ['absence' => $absence]) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="ml-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">
+                                            {{__('Refuse') }}
                                         </button>
                                     </form>
                                     @endif
@@ -83,6 +89,8 @@
                         <td>
                             @if($absence->isValidated)
                                 <p class="text-green-600">{{__('Validated')}}</p>
+                            @elseif($absence->isRefused)
+                                <p class="text-red-600">{{__('Refused')}}</p>
                             @else
                                 <p class="text-blue-600">{{__('On hold')}}</p>
                             @endif

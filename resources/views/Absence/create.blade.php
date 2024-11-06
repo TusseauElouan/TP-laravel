@@ -59,6 +59,16 @@
             @enderror
         </div>
 
+        <!-- Commentaire -->
+        <div class="flex flex-col">
+            <label for="commentaire" class="text-xl mx-1 mb-2">{{__('Commentary')}}</label>
+            <textarea id="commentaire" name="commentaire" maxlength="255" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"></textarea>
+            <!-- Message d'erreur pour le commentaire -->
+            @error('commentaire')
+                <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+            @enderror
+        </div>
+
         <!-- Bouton de soumission -->
         <input type="submit" value="{{__('Add')}}" class="bg-gray-900 rounded-md text-white py-2 cursor-pointer">
     </form>

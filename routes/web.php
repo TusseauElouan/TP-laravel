@@ -23,6 +23,7 @@ Route::middleware(['set.language', 'auth'])->group(function () {
 
     Route::resource('absence', AbsenceController::class);
     Route::post('absence/{absence}/validate', [AbsenceController::class, 'validate'])->name('absence.validate');
+    Route::post('absence/{absence}/refuse', [AbsenceController::class, 'refuse'])->name('absence.refuse');
     Route::post('absence/{absence}/restore', [AbsenceController::class, 'restore'])->name('absence.restore');
     Route::get('/absence/{absence}/confirm', [AbsenceController::class, 'showValidationPage'])->name('absence.confirmValidation');
 
