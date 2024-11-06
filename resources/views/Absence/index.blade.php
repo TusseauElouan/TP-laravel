@@ -59,7 +59,7 @@
                                     <form action="{{ route('absence.destroy', $absence) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <input type="submit" value="{{__('Delete')}}" class="ml-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">
+                                        <input type="submit" value="{{__('Delete')}}" class="ml-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">
                                     </form>
                                     @endif
                                     @if (!$absence->isValidated && !$absence->isRefused)
