@@ -58,6 +58,7 @@
     "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:": "Si vous avez des difficultés à cliquer sur le bouton \":actionText\", copiez et collez l'URL ci-dessous\ndans votre navigateur Web :",
     "Invalid filename.": "Invalid filename.",
     "Invalid JSON was returned from the route.": "Un JSON non valide a été renvoyé par la route.",
+    "know more about reasons": "En savoir plus sur les Motifs",
     "Last Name" : "Nom",
     "Last name of the user not found" : "Nom de l'utilisateur non trouvé",
     "length": "length",
