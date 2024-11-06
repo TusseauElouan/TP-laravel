@@ -16,67 +16,99 @@
         </div>
         @endif
 
-        <div id="calendar"></div>
+        <div id="calendar" class="min-h-[600px]"></div>
     </div>
 </div>
 
 @push('styles')
-<link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/main.min.css' rel='stylesheet' />
+<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/main.min.css' rel='stylesheet' />
+<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/main.min.css' rel='stylesheet' />
+<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.10/main.min.css' rel='stylesheet' />
 @endpush
 
 @push('scripts')
-<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/fr.js'></script>
-
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.10/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/index.global.min.js'></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var selectedUser = 'all';
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        locale: 'fr',
         initialView: 'dayGridMonth',
+        locale: 'fr',
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek'
+            right: 'multiMonthYear,dayGridMonth,dayGridWeek,timeGridDay'
         },
-        events: function(info, successCallback, failureCallback) {
+        buttonText: {
+            today: "Aujourd'hui",
+            year: 'Année',
+            month: 'Mois',
+            week: 'Semaine',
+            day: 'Jour'
+        },
+        firstDay: 1,
+        views: {
+            timeGridDay: {
+                titleFormat: { year: 'numeric', month: 'long', day: 'numeric' }
+            },
+            multiMonthYear: {
+                titleFormat: { year: 'numeric' }
+            }
+        },
+        slotMinTime: '08:00:00',
+        slotMaxTime: '20:00:00',
+        events: function(fetchInfo, successCallback, failureCallback) {
             fetch(`/api/absences?user=${selectedUser}`)
                 .then(response => response.json())
                 .then(data => {
                     const events = data.map(absence => ({
-                        title: absence.motif.libelle,
+                        title: `${absence.motif.libelle} - ${absence.user.prenom} ${absence.user.nom}`,
                         start: absence.date_absence_debut,
                         end: absence.date_absence_fin,
-                        color: absence.isValidated ? '#10B981' : '#EF4444',
+                        backgroundColor: absence.isValidated ? '#10B981' : '#EF4444',
+                        borderColor: absence.isValidated ? '#059669' : '#DC2626',
+                        allDay: true,
                         extendedProps: {
-                            status: absence.isValidated ? 'Validée' : 'En attente'
+                            status: absence.isValidated ? 'Validée' : 'En attente',
+                            user: `${absence.user.prenom} ${absence.user.nom}`,
+                            motif: absence.motif.libelle
                         }
                     }));
                     successCallback(events);
                 })
                 .catch(error => {
-                    console.error('Error fetching events:', error);
+                    console.error('Error:', error);
                     failureCallback(error);
                 });
         },
         eventDidMount: function(info) {
-            const tooltip = new Tooltip(info.el, {
-                title: `${info.event.title} - ${info.event.extendedProps.status}`,
-                placement: 'top',
-                trigger: 'hover',
-                container: 'body'
-            });
-        }
+            info.el.title = `Utilisateur: ${info.event.extendedProps.user}\nMotif: ${info.event.extendedProps.motif}\nStatut: ${info.event.extendedProps.status}`;
+        },
+        dayMaxEvents: true,
+        // Pour la vue année, on permet plus d'événements visibles
+        multiMonthMaxEvents: 4,
+        // Pour la vue jour, on montre plus de détails
+        eventTimeFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            meridiem: false,
+            hour12: false
+        },
     });
 
     calendar.render();
 
     // Filtre pour les administrateurs
-    if (document.getElementById('userFilter')) {
-        document.getElementById('userFilter').addEventListener('change', function(e) {
+    var userFilter = document.getElementById('userFilter');
+    if (userFilter) {
+        userFilter.addEventListener('change', function(e) {
             selectedUser = e.target.value;
             calendar.refetchEvents();
         });

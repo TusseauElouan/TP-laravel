@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.tailwindcss.com"></script>
+    @stack('styles')
     <title>@yield('title')</title>
 </head>
 
@@ -54,5 +56,6 @@
         @yield('content')
     </main>
 
+    @stack('scripts')
 </body>
 </html>
