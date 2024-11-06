@@ -7,6 +7,7 @@ use App\Http\Controllers\MotifController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['set.language', 'auth'])->group(function () {
@@ -35,6 +36,8 @@ Route::middleware(['set.language', 'auth'])->group(function () {
 
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::get('/api/absences', [CalendarController::class, 'getAbsences'])->name('api.absences');
+    Route::get('/absences/export', [ExportController::class, 'exportAbsences'])->name('absences.export');
+
 });
 
 require __DIR__.'/auth.php';

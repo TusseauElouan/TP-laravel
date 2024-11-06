@@ -16,10 +16,17 @@
 @endif
 
 <h1 class="font-bold text-center text-5xl m-4">{{__('Absences List')}}</h1>
-<div class="flex justify-end">
-    <a href="{{route('absence.create')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 mr-[12.5%] mb-5">{{__('Add an absence')}}</a>
+<div class="flex justify-end gap-2 mr-[12.5%] mb-5">
+    <a href="{{route('absences.export')}}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-200 ease-in-out flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+        {{__('Export absences')}}
+    </a>
+    <a href="{{route('absence.create')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        {{__('Add an absence')}}
+    </a>
 </div>
-
 
 <div class="flex overflow-x-auto justify-center">
     <table class="w-9/12 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 shadow-xl">
@@ -82,7 +89,6 @@
                         </td>
                     </tr>
                 @endif
-
             @endforeach
             @if($count == 0)
                 <tr>
@@ -95,5 +101,4 @@
 <div class="w-full flex justify-center mt-5">
     <a href="{{route('accueil')}}" class="bg-gray-900 text-white p-2 rounded-md hover:shadow-2xl shadow-black">{{__('Go back')}}</a>
 </div>
-
 @endsection
