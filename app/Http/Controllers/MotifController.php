@@ -127,6 +127,7 @@ class MotifController extends Controller
 
     public function info()
     {
-        return view('motif.info');
+        $motifs = Motif::all();
+        return view('motif.info', compact('motifs'));
     }
 }
