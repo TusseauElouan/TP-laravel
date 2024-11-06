@@ -3,8 +3,6 @@
 
 @section('content')
 
-
-
 <div class="grid place-content-center text-center h-screen">
     <form method="POST" action="{{ route('absence.update', $absence) }}" class="flex flex-col border-gray-300 border-2 rounded-md space-y-6 p-10 w-80">
         @csrf
@@ -83,8 +81,21 @@
             @enderror
         </div>
 
+        <!-- Champ Commentaire -->
+        <div class="flex flex-col">
+            <label for="commentaire" class="text-xl mx-1 mb-2">{{__('Comment')}}</label>
+            <textarea name="commentaire" id="commentaire" maxlength="255"
+                class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                rows="3">{{ old('commentaire', $absence->commentaire) }}</textarea>
+            <!-- Message d'erreur pour le commentaire -->
+            @error('commentaire')
+                <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+            @enderror
+        </div>
+
         <!-- Bouton de soumission -->
         <input type="submit" value="{{__('Edit')}}" class="bg-gray-900 rounded-md text-white py-2 cursor-pointer">
     </form>
 </div>
+
 @endsection

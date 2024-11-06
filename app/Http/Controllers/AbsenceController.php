@@ -101,11 +101,17 @@ class AbsenceController extends Controller
         ? (string) $validatedData['date_absence_fin']
         : '';
 
+        $commentaire = isset($validatedData['commentaire']) && is_string($validatedData['commentaire'])
+        ? (string) $validatedData['commentaire']
+        : '';
+
         $absence = new Absence();
         $absence->user_id_salarie = $userIdSalarie;
         $absence->motif_id = $motifId;
         $absence->date_absence_debut = $dateAbsenceDebut;
         $absence->date_absence_fin = $dateAbsenceFin;
+        $absence->commentaire = $commentaire;
+        $absence->isRefused = false;
         $absence->is_deleted = 0;
         $absence->save();
 
@@ -167,6 +173,7 @@ class AbsenceController extends Controller
         if ($absence->isValidated) {
             return redirect()->route('absence.index')->with('error', 'Cette absence est déjà validée.');
         }
+
         $validatedData = $request->validated();
 
         $userIdSalarie = isset($validatedData['user_id_salarie']) && is_numeric($validatedData['user_id_salarie'])
@@ -185,10 +192,15 @@ class AbsenceController extends Controller
         ? (string) $validatedData['date_absence_fin']
         : '';
 
+        $commentaire = isset($validatedData['commentaire']) && is_string($validatedData['commentaire'])
+        ? (string) $validatedData['commentaire']
+        : '';
+
         $absence->user_id_salarie = $userIdSalarie;
         $absence->motif_id = $motifId;
         $absence->date_absence_debut = $dateAbsenceDebut;
         $absence->date_absence_fin = $dateAbsenceFin;
+        $absence->commentaire = $commentaire;
 
         $absence->save();
 
@@ -219,8 +231,8 @@ class AbsenceController extends Controller
         foreach ($admins as $admin) {
             if ($admin instanceof User) {
                 Mail::to($admin->email)->send(new InfoGeneriqueMail(
-                    'Une absence a été modifié',
-                    $user ? "Une absence a été modifié par {$user->prenom} {$user->nom}." : 'Une absence a été modifiée.',
+                    'Une absence a été modifiée',
+                    $user ? "Une absence a été modifiée par {$user->prenom} {$user->nom}." : 'Une absence a été modifiée.',
                     $details,
                     $absence,
                     true
@@ -280,6 +292,32 @@ class AbsenceController extends Controller
         }
 
         return redirect()->route('absence.index')->with('success', 'Absence validée avec succès.');
+    }
+
+    /**
+     * Validate the specified absence.
+     */
+    public function refuse(Absence $absence): RedirectResponse
+    {
+        $absence->isRefused = true;
+        $absence->save();
+
+        $user = Auth::user();
+        $concernedUser = User::find($absence->user_id_salarie);
+
+        $details = $this->initMail($absence);
+
+        $recipients = array_filter([$user?->email, $concernedUser instanceof User ? $concernedUser->email : null]);
+        if (! empty($recipients)) {
+            Mail::to($recipients)->send(new InfoGeneriqueMail(
+                'Absence refusée',
+                "L'absence a été refusée.",
+                $details,
+                $absence
+            ));
+        }
+
+        return redirect()->route('absence.index')->with('success', 'Absence refusée avec succès.');
     }
 
     /**
