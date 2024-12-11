@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Motif;
 use Illuminate\Database\Seeder;
+use App\Models\Motif;
 
 class MotifSeeder extends Seeder
 {
@@ -12,7 +12,19 @@ class MotifSeeder extends Seeder
      */
     public function run(): void
     {
-        Motif::factory(10)
-            ->create();
+        $motifs = [
+            ['libelle' => 'Congé annuel', 'is_accessible_salarie' => true, 'is_deleted' => false],
+            ['libelle' => 'Maladie', 'is_accessible_salarie' => true, 'is_deleted' => false],
+            ['libelle' => 'Congé sans solde', 'is_accessible_salarie' => true, 'is_deleted' => false],
+            ['libelle' => 'Formation', 'is_accessible_salarie' => true, 'is_deleted' => false],
+            ['libelle' => 'Congé maternité', 'is_accessible_salarie' => false, 'is_deleted' => false],
+            ['libelle' => 'Absence exceptionnelle', 'is_accessible_salarie' => true, 'is_deleted' => false],
+            ['libelle' => 'Mission extérieure', 'is_accessible_salarie' => true, 'is_deleted' => false],
+            ['libelle' => 'Télétravail', 'is_accessible_salarie' => true, 'is_deleted' => false],
+        ];
+
+        foreach ($motifs as $motif) {
+            Motif::create($motif);
+        }
     }
 }
