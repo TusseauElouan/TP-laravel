@@ -214,10 +214,10 @@ class AbsenceController extends Controller
         ? (string) $validatedData['date_absence_fin']
         : '';
 
-<<<<<<< HEAD
+
         if ($request->hasFile('justificatif')) {
             $file = $request->file('justificatif');
-=======
+
         $commentaire = isset($validatedData['commentaire']) && is_string($validatedData['commentaire'])
         ? (string) $validatedData['commentaire']
         : '';
@@ -227,7 +227,7 @@ class AbsenceController extends Controller
         $absence->date_absence_debut = $dateAbsenceDebut;
         $absence->date_absence_fin = $dateAbsenceFin;
         $absence->commentaire = $commentaire;
->>>>>>> 495020dfa5c6557fe94923d867596cfe4b708ac3
+
 
             // Validation du fichier
             if (!in_array($file->getClientOriginalExtension(), ['pdf', 'jpg', 'jpeg', 'png'])) {
