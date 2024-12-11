@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class AbsenceController extends Controller
 {
@@ -102,6 +103,27 @@ class AbsenceController extends Controller
         : '';
 
         $absence = new Absence();
+
+        if ($request->hasFile('justificatif')) {
+            $file = $request->file('justificatif');
+
+            // Validation supplémentaire du fichier
+            if (!in_array($file->getClientOriginalExtension(), ['pdf', 'jpg', 'jpeg', 'png'])) {
+                return redirect()->back()->with('error', 'Format de fichier non autorisé. Utilisez PDF, JPG ou PNG.');
+            }
+
+            if ($file->getSize() > 5242880) { // 5 Mo en octets
+                return redirect()->back()->with('error', 'Le fichier ne doit pas dépasser 5 Mo.');
+            }
+
+            // Générer un nom unique pour le fichier
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // Stocker dans le dossier private/justificatifs
+            $path = $file->storeAs('justificatifs', $fileName, 'private');
+            $absence->justificatif_path = $path;
+        }
+
         $absence->user_id_salarie = $userIdSalarie;
         $absence->motif_id = $motifId;
         $absence->date_absence_debut = $dateAbsenceDebut;
@@ -185,11 +207,36 @@ class AbsenceController extends Controller
         ? (string) $validatedData['date_absence_fin']
         : '';
 
-        $absence->user_id_salarie = $userIdSalarie;
-        $absence->motif_id = $motifId;
-        $absence->date_absence_debut = $dateAbsenceDebut;
-        $absence->date_absence_fin = $dateAbsenceFin;
+        if ($request->hasFile('justificatif')) {
+            $file = $request->file('justificatif');
 
+            // Validation du fichier
+            if (!in_array($file->getClientOriginalExtension(), ['pdf', 'jpg', 'jpeg', 'png'])) {
+                return redirect()->back()->with('error', 'Format de fichier non autorisé. Utilisez PDF, JPG ou PNG.');
+            }
+
+            if ($file->getSize() > 5242880) {
+                return redirect()->back()->with('error', 'Le fichier ne doit pas dépasser 5 Mo.');
+            }
+
+            // Si un ancien fichier existe, le supprimer
+            if ($absence->justificatif_path) {
+                Storage::disk('private')->delete($absence->justificatif_path);
+            }
+
+            // Stocker le nouveau fichier
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('justificatifs', $fileName, 'private');
+            $absence->justificatif_path = $path;
+        }
+
+        // Enregistrez les autres champs
+        $absence->user_id_salarie = $request->input('user_id_salarie');
+        $absence->motif_id = $request->input('motif_id');
+        $absence->date_absence_debut = $request->input('date_absence_debut');
+        $absence->date_absence_fin = $request->input('date_absence_fin');
+
+        // dd($absence);
         $absence->save();
 
         $user = Auth::user();
@@ -314,4 +361,20 @@ class AbsenceController extends Controller
     {
         return view('absence.confirm', compact('absence'));
     }
+
+    public function downloadJustificatif(Absence $absence)
+    {
+        // Vérifier si l'utilisateur a le droit d'accéder au fichier
+        if (Auth::id() !== $absence->user_id_salarie && !Auth::user()->isAn('admin')) {
+            abort(403);
+        }
+
+        // Vérifier si le justificatif existe
+        if (!$absence->justificatif_path || !Storage::disk('private')->exists($absence->justificatif_path)) {
+            return redirect()->back()->with('error', 'Le justificatif n\'est pas disponible.');
+        }
+
+        return Storage::disk('private')->download($absence->justificatif_path);
+    }
+
 }

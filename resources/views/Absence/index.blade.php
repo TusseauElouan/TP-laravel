@@ -29,6 +29,7 @@
                 <th scope="col" class="px-6 py-3">{{__('Start date')}}</th>
                 <th scope="col" class="px-6 py-3">{{__('End date')}}</th>
                 <th scope="col" class="px-6 py-3">{{__('Employee')}}</th>
+                <th scope="col" class="px-6 py-3">{{__('Justificatif')}}</th>
                 <th scope="col" class="px-6 py-3">{{__('Actions')}}</th>
                 <th scope="col" class="px-6 py-3">{{__('Status')}}</th>
             </tr>
@@ -42,6 +43,20 @@
                         <td class="px-6 py-4">{{ \Carbon\Carbon::parse($absence->date_absence_debut)->format('d-m-Y') }}</td>
                         <td class="px-6 py-4">{{ \Carbon\Carbon::parse($absence->date_absence_fin)->format('d-m-Y') }}</td>
                         <td class="px-6 py-4">{{ $absence->user->nom ?? __('Last name of the user not found') }} {{ $absence->user->prenom ?? __('First name of the user not found')}}</td>
+                        <td class="px-6 py-4">
+                            <td class="px-6 py-4">
+                                @if($absence->justificatif_path)
+                                <a href="{{ route('absence.justificatif.download', $absence) }}" class="text-blue-500 hover:text-blue-700 underline">
+                                    Télécharger le justificatif
+                                    <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                                @else
+                                    {{ __('Pas de document') }}
+                                @endif
+                            </td>
+                        </td>
                         <td class="px-6 py-4">
                             @if(!$absence->is_deleted)
                                 @if (!$absence->isValidated)
@@ -82,7 +97,6 @@
                         </td>
                     </tr>
                 @endif
-
             @endforeach
             @if($count == 0)
                 <tr>

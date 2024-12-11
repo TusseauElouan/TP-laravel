@@ -43,6 +43,12 @@ class AbsenceCreateRequest extends FormRequest
                 'after:'.Carbon::parse($dateAbsenceDebut),
                 'before_or_equal:'.Carbon::parse($dateAbsenceDebut)->addDays(15)->toDateString(),
             ],
+            'justificatif' => [
+            'nullable',
+            'file',
+            'mimes:pdf,jpg,jpeg,png',
+            'max:5120', // 5Mo en kilobytes
+        ],
         ];
     }
 

@@ -5,16 +5,23 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white rounded-lg shadow-lg p-6">
-        @if(Auth::user()->isAn('admin'))
-        <div class="mb-4">
-            <select id="userFilter" class="border-gray-300 border-2 rounded-md p-2">
-                <option value="all">Tous les utilisateurs</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->prenom }} {{ $user->nom }}</option>
-                @endforeach
-            </select>
+        <div class="flex justify-between items-center mb-4">
+            @if(Auth::user()->isAn('admin'))
+            <div>
+                <select id="userFilter" class="border-gray-300 border-2 rounded-md p-2">
+                    <option value="all">{{ __('All users') }}</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}">{{ $user->prenom }} {{ $user->nom }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @endif
+            <div>
+                <a href="{{ route('preferences.colors') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+                    {{ __('Color Preferences') }}
+                </a>
+            </div>
         </div>
-        @endif
 
         <div id="calendar" class="min-h-[600px]"></div>
     </div>
@@ -25,6 +32,28 @@
 <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/main.min.css' rel='stylesheet' />
 <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/main.min.css' rel='stylesheet' />
 <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.10/main.min.css' rel='stylesheet' />
+<style>
+    .fc-event {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .fc-event:hover {
+        filter: brightness(0.9);
+    }
+    .fc .fc-button {
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+    .fc .fc-button:hover {
+        background-color: #1d4ed8;
+        border-color: #1d4ed8;
+    }
+    .fc .fc-button-primary:not(:disabled).fc-button-active,
+    .fc .fc-button-primary:not(:disabled):active {
+        background-color: #1e40af;
+        border-color: #1e40af;
+    }
+</style>
 @endpush
 
 @push('scripts')
@@ -68,19 +97,30 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch(`/api/absences?user=${selectedUser}`)
                 .then(response => response.json())
                 .then(data => {
-                    const events = data.map(absence => ({
-                        title: `${absence.motif.libelle} - ${absence.user.prenom} ${absence.user.nom}`,
-                        start: absence.date_absence_debut,
-                        end: absence.date_absence_fin,
-                        backgroundColor: absence.isValidated ? '#10B981' : '#EF4444',
-                        borderColor: absence.isValidated ? '#059669' : '#DC2626',
-                        allDay: true,
-                        extendedProps: {
-                            status: absence.isValidated ? 'Validée' : 'En attente',
-                            user: `${absence.user.prenom} ${absence.user.nom}`,
-                            motif: absence.motif.libelle
-                        }
-                    }));
+                    const events = data.map(absence => {
+                        // Utiliser les préférences de couleur de l'utilisateur si disponibles
+                        const colors = absence.color_preference ?? {
+                            background_color: absence.isValidated ? '#10B981' : '#EF4444',
+                            text_color: '#FFFFFF',
+                            border_color: absence.isValidated ? '#059669' : '#DC2626'
+                        };
+
+                        return {
+                            title: `${absence.motif.libelle} - ${absence.user.prenom} ${absence.user.nom}`,
+                            start: absence.date_absence_debut,
+                            end: absence.date_absence_fin,
+                            backgroundColor: colors.background_color,
+                            textColor: colors.text_color,
+                            borderColor: colors.border_color,
+                            allDay: true,
+                            extendedProps: {
+                                status: absence.isValidated ? 'Validée' : 'En attente',
+                                user: `${absence.user.prenom} ${absence.user.nom}`,
+                                motif: absence.motif.libelle,
+                                justificatif: absence.justificatif_path
+                            }
+                        };
+                    });
                     successCallback(events);
                 })
                 .catch(error => {
@@ -89,12 +129,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         },
         eventDidMount: function(info) {
-            info.el.title = `Utilisateur: ${info.event.extendedProps.user}\nMotif: ${info.event.extendedProps.motif}\nStatut: ${info.event.extendedProps.status}`;
+            const tooltipContent = [
+                `Utilisateur: ${info.event.extendedProps.user}`,
+                `Motif: ${info.event.extendedProps.motif}`,
+                `Statut: ${info.event.extendedProps.status}`,
+                info.event.extendedProps.justificatif ? 'Justificatif disponible' : 'Pas de justificatif'
+            ].join('\n');
+
+            info.el.title = tooltipContent;
+        },
+        eventClick: function(info) {
+            if (info.event.extendedProps.justificatif) {
+                window.location.href = `/absence/download/${info.event.id}`;
+            }
         },
         dayMaxEvents: true,
-        // Pour la vue année, on permet plus d'événements visibles
         multiMonthMaxEvents: 4,
-        // Pour la vue jour, on montre plus de détails
         eventTimeFormat: {
             hour: '2-digit',
             minute: '2-digit',
@@ -105,7 +155,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calendar.render();
 
-    // Filtre pour les administrateurs
     var userFilter = document.getElementById('userFilter');
     if (userFilter) {
         userFilter.addEventListener('change', function(e) {

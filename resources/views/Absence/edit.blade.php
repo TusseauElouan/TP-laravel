@@ -6,7 +6,7 @@
 
 
 <div class="grid place-content-center text-center h-screen">
-    <form method="POST" action="{{ route('absence.update', $absence) }}" class="flex flex-col border-gray-300 border-2 rounded-md space-y-6 p-10 w-80">
+    <form method="POST" action="{{ route('absence.update', $absence) }}" enctype="multipart/form-data" class="flex flex-col border-gray-300 border-2 rounded-md space-y-6 p-10 w-80">
         @csrf
         @method('PUT')
 
@@ -79,6 +79,24 @@
             <input type="date" id="date_absence_fin" name="date_absence_fin" class="border-gray-300 border-2 rounded-md p-2" value="{{ \Carbon\Carbon::parse($absence->date_absence_fin)->format('Y-m-d') }}" required>
             <!-- Message d'erreur pour la date de fin -->
             @error('date_absence_fin')
+                <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <!-- Upload du justificatif -->
+        <div class="flex flex-col">
+            <label for="justificatif" class="text-xl mx-1 mb-2">{{__('Justificatif')}}</label>
+            <input
+            type="file"
+            id="justificatif"
+            name="justificatif"
+            accept=".pdf,.jpg,.jpeg,.png"
+            class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+            max="5242880"
+            >
+            <p class="text-sm text-gray-500 mt-1">{{__('Accepted formats: PDF, JPEG, PNG (max 5MB)')}}</p>
+            <!-- Message d'erreur pour le justificatif -->
+            @error('justificatif')
                 <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
             @enderror
         </div>

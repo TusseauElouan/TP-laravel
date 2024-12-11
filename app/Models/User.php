@@ -125,4 +125,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'isAdmin' => 'boolean',
         ];
     }
+
+    public function colorPreferences()
+    {
+        return $this->hasMany(ColorPreference::class);
+    }
+
 }
