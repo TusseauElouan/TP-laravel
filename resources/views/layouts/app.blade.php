@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     @stack('styles')
     <title>@yield('title')</title>
 </head>
@@ -25,6 +26,9 @@
             <a href="{{ route('absence.index') }}" class="p-3 my-2 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">{{__('Absences List')}}</a>
             <a href="{{ route('motif.index') }}" class="p-3 my-2 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">{{__('Reasons List')}}</a>
             <a href="{{ route('calendar.index') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">{{__('Calendar')}}</a>
+            @if (auth()->user()->isA('admin'))
+                <a href="{{ route('role.index') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">{{__('Roles List')}}</a>
+            @endif
             @endauth
             <form action="{{ route('langue.change') }}" method="GET" class="ml-auto mr-4">
                 <select name="lang" onchange="this.form.submit()" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
