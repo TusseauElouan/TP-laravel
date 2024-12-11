@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ColorPreferenceController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['set.language', 'auth'])->group(function () {
@@ -21,8 +22,11 @@ Route::middleware(['set.language', 'auth'])->group(function () {
         return redirect('/');
     })->middleware(['auth'])->name('dashboard');
 
+    Route::get('motif/info', [MotifController::class, 'info'])->name('motif.info');
+
     Route::resource('absence', AbsenceController::class);
     Route::post('absence/{absence}/validate', [AbsenceController::class, 'validate'])->name('absence.validate');
+    Route::post('absence/{absence}/refuse', [AbsenceController::class, 'refuse'])->name('absence.refuse');
     Route::post('absence/{absence}/restore', [AbsenceController::class, 'restore'])->name('absence.restore');
     Route::get('/absence/{absence}/confirm', [AbsenceController::class, 'showValidationPage'])->name('absence.confirmValidation');
     Route::get('/absence/{absence}/justificatif', [AbsenceController::class, 'downloadJustificatif'])
@@ -42,6 +46,8 @@ Route::middleware(['set.language', 'auth'])->group(function () {
 
     Route::get('/preferences/colors', [ColorPreferenceController::class, 'index'])->name('preferences.colors');
     Route::post('/preferences/colors', [ColorPreferenceController::class, 'store'])->name('preferences.colors.store');
+
+    Route::get('/absences/export', [ExportController::class, 'exportAbsences'])->name('absences.export');
 
 });
 

@@ -51,6 +51,7 @@ class AbsenceUpdateRequest extends FormRequest
                 'mimes:pdf,jpg,jpeg,png',
                 'max:5120', // 5Mo en kilobytes
             ],
+            'commentaire' => 'nullable|string|max:255'
         ];
     }
 
@@ -70,6 +71,7 @@ class AbsenceUpdateRequest extends FormRequest
             'date_absence_fin.required' => 'La date de fin est requise.',
             'date_absence_fin.after' => 'La date de fin doit être après la date de début.',
             'date_absence_fin.before_or_equal' => 'La date de fin doit être dans les 15 jours suivant la date de début.',
+            'commentaire.max' => 'Le commentaire ne peut pas dépasser 255 caractères.',
         ];
     }
 }

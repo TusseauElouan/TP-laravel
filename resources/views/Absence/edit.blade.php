@@ -3,8 +3,6 @@
 
 @section('content')
 
-
-
 <div class="grid place-content-center text-center h-screen">
     <form method="POST" action="{{ route('absence.update', $absence) }}" enctype="multipart/form-data" class="flex flex-col border-gray-300 border-2 rounded-md space-y-6 p-10 w-80">
         @csrf
@@ -105,4 +103,5 @@
         <input type="submit" value="{{__('Edit')}}" class="bg-gray-900 rounded-md text-white py-2 cursor-pointer">
     </form>
 </div>
+
 @endsection
