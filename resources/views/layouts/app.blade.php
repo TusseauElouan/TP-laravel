@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     @stack('styles')
     <title>@yield('title')</title>
     <script>
@@ -85,6 +86,9 @@
             <a href="{{ route('preferences.colors') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">
                 {{ __('Préférences de couleurs') }}
             </a>
+            @if (auth()->user()->isA('admin'))
+                <a href="{{ route('role.index') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">{{__('Roles List')}}</a>
+            @endif
             @endauth
 
             <div class="ml-auto flex items-center mr-4 space-x-3">
