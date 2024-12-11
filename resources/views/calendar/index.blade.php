@@ -3,19 +3,19 @@
 @section('title', __('Calendar'))
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="bg-white rounded-lg shadow-lg p-6">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-6">
         <div class="flex justify-between items-center mb-4">
-            @if(Auth::user()->isAn('admin'))
-            <div>
-                <select id="userFilter" class="border-gray-300 border-2 rounded-md p-2">
-                    <option value="all">{{ __('All users') }}</option>
-                    @foreach($users as $user)
-                        <option value="{{ $user->id }}">{{ $user->prenom }} {{ $user->nom }}</option>
-                    @endforeach
-                </select>
-            </div>
-            @endif
+                @if (Auth::user()->isAn('admin'))
+                    <div>
+                        <select id="userFilter" class="border-gray-300 border-2 rounded-md p-2">
+                            <option value="all">{{ __('All users') }}</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->prenom }} {{ $user->nom }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
             <div>
                 <a href="{{ route('preferences.colors') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
                     {{ __('Color Preferences') }}
@@ -23,15 +23,15 @@
             </div>
         </div>
 
-        <div id="calendar" class="min-h-[600px]"></div>
+            <div id="calendar" class="min-h-[600px]"></div>
+        </div>
     </div>
-</div>
 
-@push('styles')
-<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/main.min.css' rel='stylesheet' />
-<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/main.min.css' rel='stylesheet' />
-<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/main.min.css' rel='stylesheet' />
-<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.10/main.min.css' rel='stylesheet' />
+    @push('styles')
+        <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/main.min.css' rel='stylesheet' />
+        <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/main.min.css' rel='stylesheet' />
+        <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/main.min.css' rel='stylesheet' />
+        <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.10/main.min.css' rel='stylesheet' />
 <style>
     .fc-event {
         cursor: pointer;
@@ -54,18 +54,18 @@
         border-color: #1e40af;
     }
 </style>
-@endpush
+    @endpush
 
-@push('scripts')
-<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.10/index.global.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/index.global.min.js'></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var selectedUser = 'all';
+    @push('scripts')
+        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.10/index.global.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/index.global.min.js'></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var calendarEl = document.getElementById('calendar');
+                var selectedUser = 'all';
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -153,16 +153,16 @@ document.addEventListener('DOMContentLoaded', function() {
         },
     });
 
-    calendar.render();
+                calendar.render();
 
-    var userFilter = document.getElementById('userFilter');
-    if (userFilter) {
-        userFilter.addEventListener('change', function(e) {
-            selectedUser = e.target.value;
-            calendar.refetchEvents();
-        });
-    }
-});
-</script>
-@endpush
+                            var userFilter = document.getElementById('userFilter');
+                if (userFilter) {
+                    userFilter.addEventListener('change', function(e) {
+                        selectedUser = e.target.value;
+                        calendar.refetchEvents();
+                    });
+                }
+            });
+        </script>
+    @endpush
 @endsection
