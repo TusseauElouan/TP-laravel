@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ColorPreferenceController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PlanningHistoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['set.language', 'auth'])->group(function () {
@@ -69,6 +70,8 @@ Route::middleware(['set.language', 'auth'])->group(function () {
         Route::put('/joursferies/{jourFerie}', [JourFerieController::class, 'update']);
         Route::delete('/joursferies/{jourFerie}', [JourFerieController::class, 'destroy']);
     });
+
+    Route::get('/planning-history', [PlanningHistoryController::class, 'index'])->name('planning-history.index');
 });
 
 require __DIR__ . '/auth.php';

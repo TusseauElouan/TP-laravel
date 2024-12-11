@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * 
+ *
  * @property int $id
  * @property string $name
  * @property string|null $title
@@ -15,7 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $scope
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Abilities newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Abilities newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Abilities query()
@@ -29,7 +30,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Abilities whereScope($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Abilities whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Abilities whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class Abilities extends Model
