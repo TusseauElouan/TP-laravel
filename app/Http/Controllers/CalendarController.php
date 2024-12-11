@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+
 use App\Models\Absence;
 use App\Models\JourFerie;
 use App\Models\User;
@@ -86,5 +88,55 @@ class CalendarController extends Controller
         }
 
         return response()->json($events);
+    }
+
+    public function exportPDF(string $userId = 'all')
+    {
+        $query = Absence::with(['motif', 'user'])
+            ->where('is_deleted', false);
+
+        if ($userId !== 'all') {
+            $query->where('user_id_salarie', $userId);
+        } elseif (!Auth::user()->isAn('admin')) {
+            $query->where('user_id_salarie', Auth::id());
+        }
+
+        $events = [];
+
+        // Traitement des absences
+        $absences = $query->get();
+        foreach ($absences as $absence) {
+            $events[] = [
+                'type' => 'absence',
+                'title' => "{$absence->motif->libelle} - {$absence->user->prenom} {$absence->user->nom}",
+                'start' => $absence->date_absence_debut,
+                'end' => $absence->date_absence_fin,
+                'extendedProps' => [
+                    'status' => $absence->isValidated ? 'Validée' : 'En attente',
+                    'user' => "{$absence->user->prenom} {$absence->user->nom}",
+                    'motif' => $absence->motif->libelle
+                ]
+            ];
+        }
+
+        // Traitement des jours fériés
+        $joursFeries = JourFerie::all();
+        foreach ($joursFeries as $jourFerie) {
+            $events[] = [
+                'type' => 'holiday',
+                'title' => $jourFerie->nom,
+                'start' => $jourFerie->date,
+                'end' => $jourFerie->date,
+            ];
+        }
+
+        // Trier les événements par date
+        usort($events, function ($a, $b) {
+            return strtotime($a['start']) - strtotime($b['start']);
+        });
+
+        $pdf = PDF::loadView('calendar.pdf', ['events' => $events]);
+
+        return $pdf->download('calendrier-absences.pdf');
     }
 }

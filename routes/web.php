@@ -32,7 +32,7 @@ Route::middleware(['set.language', 'auth'])->group(function () {
     Route::post('absence/{absence}/restore', [AbsenceController::class, 'restore'])->name('absence.restore');
     Route::get('/absence/{absence}/confirm', [AbsenceController::class, 'showValidationPage'])->name('absence.confirmValidation');
     Route::get('/absence/{absence}/justificatif', [AbsenceController::class, 'downloadJustificatif'])
-    ->name('absence.justificatif.download');
+        ->name('absence.justificatif.download');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -49,6 +49,10 @@ Route::middleware(['set.language', 'auth'])->group(function () {
     Route::get('/api/absences/{userId?}', [CalendarController::class, 'getAbsences'])
         ->where('userId', 'all|[0-9]+')
         ->name('api.absences');
+
+    Route::get('/calendar/export/{userId?}', [CalendarController::class, 'exportPDF'])
+        ->name('calendar.export')
+        ->middleware(['auth']);
 
     Route::get('/preferences/colors', [ColorPreferenceController::class, 'index'])->name('preferences.colors');
     Route::post('/preferences/colors', [ColorPreferenceController::class, 'store'])->name('preferences.colors.store');
@@ -67,4 +71,4 @@ Route::middleware(['set.language', 'auth'])->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

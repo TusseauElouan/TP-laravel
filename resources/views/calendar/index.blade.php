@@ -17,6 +17,10 @@
                         </select>
                     </div>
                 @endif
+                <a href="{{ route('calendar.export', ['userId' => Auth::user()->isAn('admin') ? 'all' : Auth::id()]) }}"
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
+                    {{ __('Export PDF') }}
+                </a>
                 <div>
                     <a href="{{ route('preferences.colors') }}"
                         class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
