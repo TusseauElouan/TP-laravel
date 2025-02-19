@@ -49,11 +49,7 @@ class AbsenceController extends Controller
 
         return [
             'Utilisateur' => $concernedUser ? $concernedUser->prenom . ' ' . $concernedUser->nom : 'Unknown',
-<<<<<<< HEAD
-            'Motif' => $motif ? $motif->libelle : 'Unknown',
-=======
             'Motif' => $motif,
->>>>>>> features/pdfMail
             'Date de début' => $absence->date_absence_debut,
             'Date de fin' => $absence->date_absence_fin,
             'Statut' => $status,
@@ -87,25 +83,6 @@ class AbsenceController extends Controller
         $validatedData = $request->validated();
 
         $userIdSalarie = isset($validatedData['user_id_salarie']) && is_numeric($validatedData['user_id_salarie'])
-<<<<<<< HEAD
-            ? (int)$validatedData['user_id_salarie']
-            : 1;
-
-        $motifId = isset($validatedData['motif_id']) && is_numeric($validatedData['motif_id'])
-            ? (int)$validatedData['motif_id']
-            : 1;
-
-        $dateAbsenceDebut = isset($validatedData['date_absence_debut']) && is_string($validatedData['date_absence_debut'])
-            ? (string)$validatedData['date_absence_debut']
-            : '';
-
-        $dateAbsenceFin = isset($validatedData['date_absence_fin']) && is_string($validatedData['date_absence_fin'])
-            ? (string)$validatedData['date_absence_fin']
-            : '';
-
-        $commentaire = isset($validatedData['commentaire']) && is_string($validatedData['commentaire'])
-            ? (string)$validatedData['commentaire']
-=======
             ? (int) $validatedData['user_id_salarie']
             : 1;
 
@@ -132,7 +109,6 @@ class AbsenceController extends Controller
 
         $commentaire = isset($validatedData['commentaire']) && is_string($validatedData['commentaire'])
             ? (string) $validatedData['commentaire']
->>>>>>> features/pdfMail
             : '';
 
         $absence = new Absence();
@@ -236,21 +212,6 @@ class AbsenceController extends Controller
         $validatedData = $request->validated();
 
         $userIdSalarie = isset($validatedData['user_id_salarie']) && is_numeric($validatedData['user_id_salarie'])
-<<<<<<< HEAD
-            ? (int)$validatedData['user_id_salarie']
-            : 1;
-
-        $motifId = isset($validatedData['motif_id']) && is_numeric($validatedData['motif_id'])
-            ? (int)$validatedData['motif_id']
-            : 1;
-
-        $dateAbsenceDebut = isset($validatedData['date_absence_debut']) && is_string($validatedData['date_absence_debut'])
-            ? (string)$validatedData['date_absence_debut']
-            : '';
-
-        $dateAbsenceFin = isset($validatedData['date_absence_fin']) && is_string($validatedData['date_absence_fin'])
-            ? (string)$validatedData['date_absence_fin']
-=======
             ? (int) $validatedData['user_id_salarie']
             : 1;
 
@@ -264,7 +225,6 @@ class AbsenceController extends Controller
 
         $dateAbsenceFin = isset($validatedData['date_absence_fin']) && is_string($validatedData['date_absence_fin'])
             ? (string) $validatedData['date_absence_fin']
->>>>>>> features/pdfMail
             : '';
 
         $commentaire = isset($validatedData['commentaire']) && is_string($validatedData['commentaire'])
@@ -274,8 +234,6 @@ class AbsenceController extends Controller
         if ($request->hasFile('justificatif')) {
             $file = $request->file('justificatif');
 
-<<<<<<< HEAD
-=======
             $commentaire = isset($validatedData['commentaire']) && is_string($validatedData['commentaire'])
                 ? (string) $validatedData['commentaire']
                 : '';
@@ -287,7 +245,6 @@ class AbsenceController extends Controller
             $absence->commentaire = $commentaire;
 
 
->>>>>>> features/pdfMail
             // Validation du fichier
             if (!in_array($file->getClientOriginalExtension(), ['pdf', 'jpg', 'jpeg', 'png'])) {
                 return redirect()->back()->with('error', 'Format de fichier non autorisé. Utilisez PDF, JPG ou PNG.');
