@@ -131,4 +131,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ColorPreference::class);
     }
 
+    public function timeAccess()
+    {
+        return $this->hasOne(TimeAccess::class);
+    }
+
 }
