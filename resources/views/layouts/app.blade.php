@@ -82,6 +82,9 @@
                         class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-x border-white">
                         Configuration des jours fériés
                     </a>
+                    <a href="{{ route('planning-history.index') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-x border-white">
+                        Historique du planning
+                    </a>
                 @endif
             <a href="{{ route('preferences.colors') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">
                 {{ __('Préférences de couleurs') }}

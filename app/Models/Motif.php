@@ -9,16 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * 
+ *
  * @property int $id
  * @property string $libelle
  * @property bool $is_accessible_salarie
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property bool $is_deleted
- *
  * @property-read Collection<int, \App\Models\Absence> $absence
  * @property-read int|null $absence_count
- *
  * @method static \Database\Factories\MotifFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Motif newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Motif newQuery()
@@ -29,7 +29,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Motif whereIsDeleted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Motif whereLibelle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Motif whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class Motif extends Model

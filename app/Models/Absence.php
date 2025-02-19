@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * 
+ *
  * @property int $id
  * @property int $motif_id
  * @property int $user_id_salarie
@@ -17,10 +19,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property bool $isValidated
- *
  * @property-read \App\Models\Motif|null $motif
  * @property-read \App\Models\User|null $user
- *
  * @method static \Database\Factories\AbsenceFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Absence newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Absence newQuery()
@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereMotifId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Absence whereUserIdSalarie($value)
- *
  * @mixin \Eloquent
  */
 class Absence extends Model
