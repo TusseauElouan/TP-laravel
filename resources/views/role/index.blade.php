@@ -19,6 +19,7 @@
                 <td>{{ $role->name }}</td>
                 <td>{{ $role->title }}</td>
                 <td>
+                    <a href="{{ route('role.edit', $role->id) }}" class="btn btn-warning btn-sm">{{__('Edit')}}</a>
                     <form action="{{ route('role.destroy', $role->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
