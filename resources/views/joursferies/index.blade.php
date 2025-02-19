@@ -39,8 +39,8 @@
                     <tbody>
                         @forelse($joursFeries as $jourFerie)
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">{{ $jourFerie->nom }}</td>
-                                <td class="px-6 py-4">{{ $jourFerie->date->format('d/m/Y') }}</td>
+                                <td class="px-6 py-4 text-black">{{ $jourFerie->nom }}</td>
+                                <td class="px-6 py-4 text-black">{{ $jourFerie->date->format('d/m/Y') }}</td>
                                 <td class="px-6 py-4">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $jourFerie->is_recurring ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
                                         {{ $jourFerie->is_recurring ? __('Oui') : __('Non') }}
@@ -57,7 +57,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-4 text-center">{{__('Aucun jour férié enregistré')}}</td>
+                                <td colspan="4" class="px-6 py-4 text-center text-black">{{__('Aucun jour férié enregistré')}}</td>
                             </tr>
                         @endforelse
                     </tbody>
