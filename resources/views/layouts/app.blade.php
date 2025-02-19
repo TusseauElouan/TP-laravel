@@ -80,14 +80,14 @@
                 @if (Auth::user()->isAn('admin'))
                     <a href="{{ route('joursferies.index') }}"
                         class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-x border-white">
-                        Configuration des jours fériés
+                        {{ __('Holidays Config') }}
                     </a>
                     <a href="{{ route('time-access.index') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-x border-white">
-                        Gestion des accès horaires
+                        {{ __('Time Access Config') }}
                     </a>
                 @endif
             <a href="{{ route('preferences.colors') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">
-                {{ __('Préférences de couleurs') }}
+                {{ __('Color Preferences') }}
             </a>
             @if (auth()->user()->isA('admin'))
                 <a href="{{ route('role.index') }}" class="my-2 p-3 hover:bg-gray-700 text-white ease-in duration-300 border-r border-white">{{__('Roles List')}}</a>
