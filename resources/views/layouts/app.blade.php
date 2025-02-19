@@ -100,7 +100,7 @@
                     @endauth
                 </nav>
 
-                <!-- Bouton Dark Mode + Sélecteur de Langue -->
+                <!-- Sélecteur de Langue -->
                 <div class="flex items-center space-x-4">
                     <!-- Sélecteur de langue -->
                     <form action="{{ route('langue.change') }}" method="GET">
@@ -112,7 +112,7 @@
                     </form>
 
                     <!-- Bouton Dark Mode -->
-                    <button onclick="toggleDarkMode()" class="w-10 h-10 flex items-center justify-center bg-gray-700 text-white rounded-full transition-all hover:bg-gray-600">
+                    {{-- <button onclick="toggleDarkMode()" class="w-10 h-10 flex items-center justify-center bg-gray-700 text-white rounded-full transition-all hover:bg-gray-600">
                         <svg id="sunIcon" class="h-6 w-6 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M12 3v1m6.364 2.636l-.707.707M21 12h-1M17.364 19.364l-.707-.707M12 21v-1m-6.364-2.636l.707-.707M3 12h1M6.636 6.636l.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -121,7 +121,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M21 12.79A9 9 0 1111.21 3.05 7 7 0 0021 12.79z" />
                         </svg>
-                    </button>
+                    </button> --}}
 
                     <!-- Boutons Login/Logout -->
                     @guest
