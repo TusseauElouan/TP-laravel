@@ -12,6 +12,8 @@ use Illuminate\Notifications\Notifiable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 /**
+ * 
+ *
  * @property int $id
  * @property string $nom
  * @property string $prenom
@@ -22,7 +24,6 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Silber\Bouncer\Database\Ability> $abilities
  * @property-read int|null $abilities_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Absence> $absence
@@ -32,7 +33,6 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Silber\Bouncer\Database\Role> $roles
  * @property-read int|null $roles_count
- *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -50,7 +50,8 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePrenom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- *
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ColorPreference> $colorPreferences
+ * @property-read int|null $color_preferences_count
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements MustVerifyEmail
