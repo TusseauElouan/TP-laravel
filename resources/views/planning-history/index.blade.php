@@ -2,7 +2,9 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">Historique des Modifications du Planning</h1>
+    <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100 text-center">
+        Historique des Modifications du Planning
+    </h1>
     <div class="bg-white shadow rounded-lg">
         <table class="min-w-full border-collapse block md:table">
             <thead class="block md:table-header-group">

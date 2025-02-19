@@ -26,10 +26,10 @@
         <tbody>
             @forelse ($users as $user)
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td class="px-6 py-4">{{ $user->prenom }}</td>
-                    <td class="px-6 py-4">{{ $user->nom }}</td>
+                    <td class="px-6 py-4 text-black">{{ $user->prenom }}</td>
+                    <td class="px-6 py-4 text-black">{{ $user->nom }}</td>
                     <td class="px-6 py-4">
-                        <a href="{{ route('user.show', $user) }}">{{__('User details')}}</a>
+                        <a href="{{ route('user.show', $user) }}" class="text-black">{{__('User details')}}</a>
                         <a href="{{ route('user.edit', $user)}}" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">{{__('Edit')}}</a>
                     </td>
                 </tr>

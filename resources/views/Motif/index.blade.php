@@ -14,7 +14,7 @@
 </div>
 @endif
 @auth
-<h1 class="font-bold text-center text-5xl m-4">{{__('Reasons List')}}</h1>
+<h1 class="font-bold text-center text-5xl m-4 text-white">{{__('Reasons List')}}</h1>
 <div class="flex justify-end">
     <a href="{{route('motif.info')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 mb-5">{{__('know more about reasons')}}</a>
 
@@ -33,8 +33,8 @@
         <tbody>
             @forelse($motifs as $motif)
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td class="px-6 py-4">{{ $motif->libelle ?? 'Aucun nom' }}</td>
-                    <td class="px-6 py-4">{{ $motif->is_accessible_salarie ? __('Accessible to employee') : __('Not accessible to employee') }}</td>
+                    <td class="px-6 py-4 text-black">{{ $motif->libelle ?? 'Aucun nom' }}</td>
+                    <td class="px-6 py-4 text-black">{{ $motif->is_accessible_salarie ? __('Accessible to employee') : __('Not accessible to employee') }}</td>
                     <td class="px-6 py-4">
                         @if (Auth::check() && Auth::user()->isA('admin'))
                             <a href="{{route('motif.edit', ['motif' => $motif])}}" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-200 ease-in-out">{{__('Edit')}}</a>
