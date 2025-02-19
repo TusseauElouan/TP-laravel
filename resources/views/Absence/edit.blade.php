@@ -14,58 +14,49 @@
             <select required id="user_id_salarie" name="user_id_salarie" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
                 @if (Auth::check() && Auth::user()->isA('admin'))
                     @foreach($users as $user)
-                        <option value="{{ $user->id }}">{{ $user->nom }} {{ $user->prenom }}</option>
+                        <option value="{{ $user->id }}" {{ $user->id == $absence->user_id_salarie ? 'selected' : '' }}>
+                            {{ $user->nom }} {{ $user->prenom }}
+                        </option>
                     @endforeach
                 @else
                     <option value="{{ Auth::user()->id }}">{{ Auth::user()->nom }} {{ Auth::user()->prenom }}</option>
                 @endif
             </select>
-            <!-- Message d'erreur pour l'utilisateur -->
             @error('user_id_salarie')
                 <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
             @enderror
         </div>
 
         <!-- Sélection du motif -->
-        @if (Auth::check() && Auth::user()->isAn('admin'))
-            <div class="flex flex-col">
-                <label for="motif_id" class="text-xl mx-1 mb-2">{{__('Reason')}}</label>
-                <select id="motif_id" name="motif_id" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
-                    @foreach($motifs as $motif)
-                        <option value="{{ $motif->id }}" {{ $motif->id == $absence->motif_id ? 'selected' : '' }}>
-                            {{ $motif->libelle }}
-                        </option>
-                    @endforeach
-                </select>
-                <!-- Message d'erreur pour le motif -->
-                @error('motif_id')
-                    <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
-                @enderror
-            </div>
-        @else
-            <div class="flex flex-col">
-                <label for="motif_id" class="text-xl mx-1 mb-2">{{__('Reason')}}</label>
-                <select id="motif_id" name="motif_id" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
-                    @foreach($motifs as $motif)
-                        @if ($motif->is_accessible_salarie)
-                            <option value="{{ $motif->id }}" {{ $motif->id == $absence->motif_id ? 'selected' : '' }}>
-                                {{ $motif->libelle }}
-                            </option>
-                        @endif
-                    @endforeach
-                </select>
-                <!-- Message d'erreur pour le motif -->
-                @error('motif_id')
-                    <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
-                @enderror
-            </div>
-        @endif
+        <div class="flex flex-col">
+            <label for="motif_id" class="text-xl mx-1 mb-2">{{__('Reason')}}</label>
+            <select id="motif_id" name="motif_id" class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
+                @foreach($motifs as $motif)
+                    <option value="{{ $motif->id }}" {{ $motif->id == $absence->motif_id ? 'selected' : '' }}>
+                        {{ $motif->libelle }}
+                    </option>
+                @endforeach
+            </select>
+            @error('motif_id')
+                <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <!-- Champ pour le motif personnalisé (caché par défaut) -->
+        <div id="custom_motif_container" class="flex flex-col {{ $absence->is_personnalise ? '' : 'hidden' }}">
+            <label for="custom_motif" class="text-xl mx-1 mb-2">{{ __('Custom reason') }}</label>
+            <input type="text" id="custom_motif" name="custom_motif" value="{{ $absence->nom_personnalise ?? '' }}"
+                class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
+            @error('custom_motif')
+                <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+            @enderror
+        </div>
 
         <!-- Date de début -->
         <div class="flex flex-col">
             <label for="date_absence_debut" class="text-xl mx-1 mb-2">{{__('Start date')}}</label>
-            <input type="date" id="date_absence_debut" name="date_absence_debut" class="border-gray-300 border-2 rounded-md p-2" value="{{ \Carbon\Carbon::parse($absence->date_absence_debut)->format('Y-m-d') }}" required>
-            <!-- Message d'erreur pour la date de début -->
+            <input type="date" id="date_absence_debut" name="date_absence_debut" class="border-gray-300 border-2 rounded-md p-2"
+                value="{{ \Carbon\Carbon::parse($absence->date_absence_debut)->format('Y-m-d') }}" required>
             @error('date_absence_debut')
                 <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
             @enderror
@@ -74,26 +65,19 @@
         <!-- Date de fin -->
         <div class="flex flex-col">
             <label for="date_absence_fin" class="text-xl mx-1 mb-2">{{__('End date')}}</label>
-            <input type="date" id="date_absence_fin" name="date_absence_fin" class="border-gray-300 border-2 rounded-md p-2" value="{{ \Carbon\Carbon::parse($absence->date_absence_fin)->format('Y-m-d') }}" required>
-            <!-- Message d'erreur pour la date de fin -->
+            <input type="date" id="date_absence_fin" name="date_absence_fin" class="border-gray-300 border-2 rounded-md p-2"
+                value="{{ \Carbon\Carbon::parse($absence->date_absence_fin)->format('Y-m-d') }}" required>
             @error('date_absence_fin')
                 <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
             @enderror
         </div>
 
         <!-- Upload du justificatif -->
-        <div class="flex flex-col">
+        <div id="justificatif_container" class="flex flex-col {{ $absence->is_personnalise ? 'hidden' : '' }}">
             <label for="justificatif" class="text-xl mx-1 mb-2">{{__('Justificatif')}}</label>
-            <input
-            type="file"
-            id="justificatif"
-            name="justificatif"
-            accept=".pdf,.jpg,.jpeg,.png"
-            class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-            max="5242880"
-            >
+            <input type="file" id="justificatif" name="justificatif" accept=".pdf,.jpg,.jpeg,.png"
+                class="border-gray-300 border-2 rounded-md p-2 text-gray-900 focus:ring-blue-500 focus:border-blue-500 focus:outline-none" max="5242880">
             <p class="text-sm text-gray-500 mt-1">{{__('Accepted formats: PDF, JPEG, PNG (max 5MB)')}}</p>
-            <!-- Message d'erreur pour le justificatif -->
             @error('justificatif')
                 <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
             @enderror
@@ -103,5 +87,29 @@
         <input type="submit" value="{{__('Edit')}}" class="bg-gray-900 rounded-md text-white py-2 cursor-pointer">
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const motifSelect = document.getElementById('motif_id');
+        const customMotifContainer = document.getElementById('custom_motif_container');
+        const customMotifInput = document.getElementById('custom_motif');
+        const justificatifContainer = document.getElementById('justificatif_container');
+
+        function toggleFields() {
+            if (motifSelect.value === '9') {
+                customMotifContainer.classList.remove('hidden');
+                justificatifContainer.classList.add('hidden');
+                customMotifInput.setAttribute('required', 'required');
+            } else {
+                customMotifContainer.classList.add('hidden');
+                justificatifContainer.classList.remove('hidden');
+                customMotifInput.removeAttribute('required');
+            }
+        }
+
+        motifSelect.addEventListener('change', toggleFields);
+        toggleFields();
+    });
+</script>
 
 @endsection

@@ -44,14 +44,14 @@ class AbsenceController extends Controller
     public function initMail(Absence $absence): array
     {
         $user = Auth::user();
-        $motif = Motif::find($absence->motif_id);
+        $motif = $absence->is_personnalise ? $absence->nom_personnalise : (Motif::find($absence->motif_id)?->libelle ?? 'Unknown');
         $concernedUser = User::find($absence->user_id_salarie);
 
         $status = $absence->isValidated ? 'Validée' : 'En attente';
 
         return [
-            'Utilisateur' => $concernedUser ? $concernedUser->prenom.' '.$concernedUser->nom : 'Unknown',
-            'Motif' => $motif ? $motif->libelle : 'Unknown',
+            'Utilisateur' => $concernedUser ? $concernedUser->prenom . ' ' . $concernedUser->nom : 'Unknown',
+            'Motif' => $motif,
             'Date de début' => $absence->date_absence_debut,
             'Date de fin' => $absence->date_absence_fin,
             'Statut' => $status,
@@ -87,28 +87,38 @@ class AbsenceController extends Controller
         $validatedData = $request->validated();
 
         $userIdSalarie = isset($validatedData['user_id_salarie']) && is_numeric($validatedData['user_id_salarie'])
-        ? (int) $validatedData['user_id_salarie']
-        : 1;
+            ? (int) $validatedData['user_id_salarie']
+            : 1;
 
-        $motifId = isset($validatedData['motif_id']) && is_numeric($validatedData['motif_id'])
-        ? (int) $validatedData['motif_id']
-        : 1;
+        $motifId = 9;
+        $nomPersonnalise = null;
+        $isPersonnalise = false;
+
+        if ((int) $validatedData['motif_id'] === 9 && isset($validatedData['custom_motif'])) {
+            $nomPersonnalise = $validatedData['custom_motif'];
+            $isPersonnalise = true;
+        } else {
+            $motifId = isset($validatedData['motif_id']) && is_numeric($validatedData['motif_id'])
+                ? (int) $validatedData['motif_id']
+                : 1;
+        }
 
         $dateAbsenceDebut = isset($validatedData['date_absence_debut']) && is_string($validatedData['date_absence_debut'])
-        ? (string) $validatedData['date_absence_debut']
-        : '';
+            ? (string) $validatedData['date_absence_debut']
+            : '';
 
         $dateAbsenceFin = isset($validatedData['date_absence_fin']) && is_string($validatedData['date_absence_fin'])
-        ? (string) $validatedData['date_absence_fin']
-        : '';
+            ? (string) $validatedData['date_absence_fin']
+            : '';
 
         $commentaire = isset($validatedData['commentaire']) && is_string($validatedData['commentaire'])
-        ? (string) $validatedData['commentaire']
-        : '';
+            ? (string) $validatedData['commentaire']
+            : '';
 
         $absence = new Absence();
 
-        if ($request->hasFile('justificatif')) {
+        // Gérer le justificatif seulement si ce n'est pas un motif personnalisé
+        if (!$isPersonnalise && $request->hasFile('justificatif')) {
             $file = $request->file('justificatif');
 
             // Validation supplémentaire du fichier
@@ -135,6 +145,8 @@ class AbsenceController extends Controller
         $absence->commentaire = $commentaire;
         $absence->isRefused = false;
         $absence->is_deleted = 0;
+        $absence->is_personnalise = $isPersonnalise;
+        $absence->nom_personnalise = $nomPersonnalise;
         $absence->save();
 
         $details = $this->initMail($absence);
@@ -199,34 +211,34 @@ class AbsenceController extends Controller
         $validatedData = $request->validated();
 
         $userIdSalarie = isset($validatedData['user_id_salarie']) && is_numeric($validatedData['user_id_salarie'])
-        ? (int) $validatedData['user_id_salarie']
-        : 1;
+            ? (int) $validatedData['user_id_salarie']
+            : 1;
 
         $motifId = isset($validatedData['motif_id']) && is_numeric($validatedData['motif_id'])
-        ? (int) $validatedData['motif_id']
-        : 1;
+            ? (int) $validatedData['motif_id']
+            : 1;
 
         $dateAbsenceDebut = isset($validatedData['date_absence_debut']) && is_string($validatedData['date_absence_debut'])
-        ? (string) $validatedData['date_absence_debut']
-        : '';
+            ? (string) $validatedData['date_absence_debut']
+            : '';
 
         $dateAbsenceFin = isset($validatedData['date_absence_fin']) && is_string($validatedData['date_absence_fin'])
-        ? (string) $validatedData['date_absence_fin']
-        : '';
+            ? (string) $validatedData['date_absence_fin']
+            : '';
 
 
         if ($request->hasFile('justificatif')) {
             $file = $request->file('justificatif');
 
-        $commentaire = isset($validatedData['commentaire']) && is_string($validatedData['commentaire'])
-        ? (string) $validatedData['commentaire']
-        : '';
+            $commentaire = isset($validatedData['commentaire']) && is_string($validatedData['commentaire'])
+                ? (string) $validatedData['commentaire']
+                : '';
 
-        $absence->user_id_salarie = $userIdSalarie;
-        $absence->motif_id = $motifId;
-        $absence->date_absence_debut = $dateAbsenceDebut;
-        $absence->date_absence_fin = $dateAbsenceFin;
-        $absence->commentaire = $commentaire;
+            $absence->user_id_salarie = $userIdSalarie;
+            $absence->motif_id = $motifId;
+            $absence->date_absence_debut = $dateAbsenceDebut;
+            $absence->date_absence_fin = $dateAbsenceFin;
+            $absence->commentaire = $commentaire;
 
 
             // Validation du fichier
@@ -310,7 +322,7 @@ class AbsenceController extends Controller
         $concernedUser = User::find($absence->user_id_salarie);
 
         $recipients = array_filter([$user?->email, $concernedUser instanceof User ? $concernedUser->email : null]);
-        if (! empty($recipients)) {
+        if (!empty($recipients)) {
             Mail::to($recipients)->send(new InfoGeneriqueMail(
                 'Absence supprimée',
                 "L'absence a été supprimée.",
@@ -336,7 +348,7 @@ class AbsenceController extends Controller
         $details = $this->initMail($absence);
 
         $recipients = array_filter([$user?->email, $concernedUser instanceof User ? $concernedUser->email : null]);
-        if (! empty($recipients)) {
+        if (!empty($recipients)) {
             Mail::to($recipients)->send(new InfoGeneriqueMail(
                 'Absence validée',
                 "L'absence a été validée.",
@@ -362,7 +374,7 @@ class AbsenceController extends Controller
         $details = $this->initMail($absence);
 
         $recipients = array_filter([$user?->email, $concernedUser instanceof User ? $concernedUser->email : null]);
-        if (! empty($recipients)) {
+        if (!empty($recipients)) {
             Mail::to($recipients)->send(new InfoGeneriqueMail(
                 'Absence refusée',
                 "L'absence a été refusée.",
@@ -387,7 +399,7 @@ class AbsenceController extends Controller
         $details = $this->initMail($absence);
 
         $recipients = array_filter([$user?->email, $concernedUser instanceof User ? $concernedUser->email : null]);
-        if (! empty($recipients)) {
+        if (!empty($recipients)) {
             Mail::to($recipients)->send(new InfoGeneriqueMail(
                 'Absence restorée',
                 "L'absence a été restorée.",

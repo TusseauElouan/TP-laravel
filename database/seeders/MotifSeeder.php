@@ -21,6 +21,7 @@ class MotifSeeder extends Seeder
             ['libelle' => 'Absence exceptionnelle', 'is_accessible_salarie' => true, 'is_deleted' => false],
             ['libelle' => 'Mission extérieure', 'is_accessible_salarie' => true, 'is_deleted' => false],
             ['libelle' => 'Télétravail', 'is_accessible_salarie' => true, 'is_deleted' => false],
+            ['libelle' => 'Personnalisé', 'is_accessible_salarie' => true, 'is_deleted' => false],
         ];
 
         foreach ($motifs as $motif) {
