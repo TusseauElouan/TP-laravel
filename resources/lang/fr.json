@@ -156,5 +156,8 @@
     "Whoops!": "Oups !",
     "You are receiving this email because we received a password reset request for your account.": "Vous recevez cet e-mail car nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.",
     "You're logged in!": "Vous êtes connecté·e !",
-    "Your email address is unverified.": "Votre adresse e-mail n'est pas vérifiée."
+    "Your email address is unverified.": "Votre adresse e-mail n'est pas vérifiée.",
+    "Holidays Config":"Configuration des jours fériés",
+    "Time Access Config":"Gestion des accès horaires",
+    "Color Preferences":"Préférences de couleurs"
 }
