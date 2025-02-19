@@ -4,6 +4,7 @@ use App\Http\Middleware\LangueMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\TimeRestriction;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,7 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'set.language' => LangueMiddleware::class,
+            'time.restrict' => TimeRestriction::class
         ]);
+
+        $middleware->append(TimeRestriction::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

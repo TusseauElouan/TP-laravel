@@ -10,11 +10,18 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ColorPreferenceController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\TimeAccessController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PlanningHistoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['set.language', 'auth'])->group(function () {
+
+    Route::get('/time-restriction', function () {
+        return view('time-restriction');
+    })->name('time-restriction');
+
+    Route::middleware('time.restrict')->group(function () {
     Route::get('/', [AccueilController::class, 'index'])->name('accueil');
 
     Route::get('/welcome', function () {
@@ -24,6 +31,14 @@ Route::middleware(['set.language', 'auth'])->group(function () {
     Route::get('/dashboard', function () {
         return redirect('/');
     })->middleware(['auth'])->name('dashboard');
+
+    Route::prefix('time-access')->name('time-access.')->group(function () {
+        Route::get('/', [TimeAccessController::class, 'index'])->name('index');
+        Route::put('/{user}', [TimeAccessController::class, 'update'])->name('update');
+        Route::post('/{user}/activate', [TimeAccessController::class, 'activate'])->name('activate');
+        Route::post('/{user}/deactivate', [TimeAccessController::class, 'deactivate'])->name('deactivate');
+        Route::post('/{user}/reset', [TimeAccessController::class, 'reset'])->name('reset');
+    });
 
     Route::get('motif/info', [MotifController::class, 'info'])->name('motif.info');
 
@@ -69,6 +84,7 @@ Route::middleware(['set.language', 'auth'])->group(function () {
         Route::get('/joursferies/{jourFerie}', [JourFerieController::class, 'show']);
         Route::put('/joursferies/{jourFerie}', [JourFerieController::class, 'update']);
         Route::delete('/joursferies/{jourFerie}', [JourFerieController::class, 'destroy']);
+        });
     });
 
     Route::get('/planning-history', [PlanningHistoryController::class, 'index'])->name('planning-history.index');

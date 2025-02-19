@@ -69,7 +69,7 @@
                 </a>
 
                 <!-- Menu pour desktop -->
-                <nav class="hidden md:flex space-x-4">
+                <nav class="hidden md:flex items-center space-x-6">
                     @auth
                         <a href="{{ route('user.index') }}" class="text-white hover:text-gray-300 transition">
                             {{ Auth::user()->isA('admin') ? __('Users List') : __('Profile') }}
@@ -83,18 +83,19 @@
                         <a href="{{ route('calendar.index') }}" class="text-white hover:text-gray-300 transition">
                             {{ __('Calendar') }}
                         </a>
+
+                        <!-- Sélecteur stylisé pour les pages admin -->
                         @if (Auth::user()->isAn('admin'))
-                            <a href="{{ route('joursferies.index') }}" class="text-white hover:text-gray-300 transition">
-                                {{ __('Holidays Config') }}
-                            </a>
-                            <a href="{{ route('planning-history.index') }}" class="text-white hover:text-gray-300 transition">
-                                {{ __('Planning History') }}
-                            </a>
-                        @endif
-                        @if (auth()->user()->isA('admin'))
-                            <a href="{{ route('role.index') }}" class="text-white hover:text-gray-300 transition">
-                                {{ __('Roles List') }}
-                            </a>
+                            <div class="relative">
+                                <select id="adminPages" class="bg-gray-700 text-white py-2 px-4 rounded-md border border-gray-600 focus:outline-none hover:bg-gray-600 transition">
+                                    <option selected disabled>{{ __('Admin Pages') }}</option>
+                                    <option value="{{ route('joursferies.index') }}">{{ __('Holidays Config') }}</option>
+                                    <option value="{{ route('time-access.index') }}">{{ __('Time Access Config') }}</option>
+                                    <option value="{{ route('planning-history.index') }}">{{ __('Planning History') }}</option>
+                                    <option value="{{ route('role.index') }}">{{ __('Roles List') }}</option>
+                                    <option value="{{ route('preferences.colors') }}">{{ __('Color Preferences') }}</option>
+                                </select>
+                            </div>
                         @endif
                     @endauth
                 </nav>
@@ -104,7 +105,7 @@
                     <!-- Sélecteur de langue -->
                     <form action="{{ route('langue.change') }}" method="GET">
                         <select name="lang" onchange="this.form.submit()"
-                            class="bg-gray-700 text-white py-2 px-3 rounded-md border border-gray-600 focus:outline-none">
+                            class="bg-gray-700 text-white py-2 px-4 rounded-md border border-gray-600 focus:outline-none hover:bg-gray-600 transition">
                             <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
                             <option value="fr" {{ app()->getLocale() == 'fr' ? 'selected' : '' }}>Français</option>
                         </select>
@@ -163,12 +164,16 @@
                         {{ __('Calendar') }}
                     </a>
                     @if (Auth::user()->isAn('admin'))
-                        <a href="{{ route('joursferies.index') }}" class="text-white hover:text-gray-300 transition">
-                            {{ __('Holidays Config') }}
-                        </a>
-                        <a href="{{ route('planning-history.index') }}" class="text-white hover:text-gray-300 transition">
-                            {{ __('Planning History') }}
-                        </a>
+                        <div class="relative">
+                            <select id="adminPagesMobile" class="w-full bg-gray-700 text-white py-2 px-3 rounded-md border border-gray-600 focus:outline-none hover:bg-gray-600 transition">
+                                <option selected disabled>{{ __('Admin Pages') }}</option>
+                                <option value="{{ route('joursferies.index') }}">{{ __('Holidays Config') }}</option>
+                                <option value="{{ route('time-access.index') }}">{{ __('Time Access Config') }}</option>
+                                <option value="{{ route('planning-history.index') }}">{{ __('Planning History') }}</option>
+                                <option value="{{ route('role.index') }}">{{ __('Roles List') }}</option>
+                                <option value="{{ route('preferences.colors') }}">{{ __('Color Preferences') }}</option>
+                            </select>
+                        </div>
                     @endif
                 @endauth
             </div>
@@ -179,7 +184,17 @@
         document.getElementById('mobileMenuButton').addEventListener('click', function () {
             document.getElementById('mobileMenu').classList.toggle('hidden');
         });
+
+        // Redirection automatique lors du choix dans le select
+        document.getElementById('adminPages')?.addEventListener('change', function () {
+            window.location.href = this.value;
+        });
+
+        document.getElementById('adminPagesMobile')?.addEventListener('change', function () {
+            window.location.href = this.value;
+        });
     </script>
+
 
     <main>
         @yield('message')
