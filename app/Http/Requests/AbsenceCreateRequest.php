@@ -29,7 +29,7 @@ class AbsenceCreateRequest extends FormRequest
         }
 
         return [
-            'motif_id' => 'required|exists:motifs,id',
+            'motif_id' => 'required',
             'user_id_salarie' => 'required|exists:users,id',
             'date_absence_debut' => [
                 'required',
@@ -49,7 +49,8 @@ class AbsenceCreateRequest extends FormRequest
             'mimes:pdf,jpg,jpeg,png',
             'max:5120', // 5Mo en kilobytes
         ],
-            'commentaire' => 'nullable|string|max:255'
+            'commentaire' => 'nullable|string|max:255',
+            'custom_motif' => 'nullable|string|max:255',
         ];
     }
 
